@@ -8,5 +8,5 @@ class DH_M1A1CarbineBashDamType extends DHWeaponBashDamageType
 
 defaultproperties
 {
-    WeaponClass=Class'DH_M1CarbineWeapon'
+    WeaponClass=Class'DH_M1A1CarbineWeapon'
 }

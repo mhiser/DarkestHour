@@ -16,7 +16,7 @@ defaultproperties
     DamageRadius=740.0  //700 gramms
     ShellImpactDamage=Class'DH_BazookaImpactDamType'
 
-    MyDamageType=Class'DH_BazookaDamType'
+    MyDamageType=Class'DH_BazookaM9DamType'
 
     StraightFlightTime=0.5
 

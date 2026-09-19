@@ -8,7 +8,7 @@ class DH_M1A1CarbineDamType extends DHMediumCaliberDamageType
 
 defaultproperties
 {
-    WeaponClass=Class'DH_M1CarbineWeapon'
+    WeaponClass=Class'DH_M1A1CarbineWeapon'
     HUDIcon=Texture'InterfaceArt_tex.b792mm'
     KDamageImpulse=1500.0
     KDeathVel=110.0

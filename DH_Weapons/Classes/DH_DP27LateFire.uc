@@ -7,8 +7,8 @@ class DH_DP27LateFire extends DHFastAutoFire;
 
 defaultproperties
 {
-    ProjectileClass=Class'DH_DP27Bullet'
-    TracerProjectileClass=Class'DH_DP27TracerBullet'
+    ProjectileClass=Class'DH_DP27LateBullet'
+    TracerProjectileClass=Class'DH_DP27LateTracerBullet'
     AmmoClass=Class'DH_DP27Ammo'
     FireRate=0.105 // 632 rpm (value had to be found experimentally due to an engine bug)
     TracerFrequency=5
