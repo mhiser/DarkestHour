@@ -9,12 +9,22 @@ var() RangeInt HatchClearRange;
 
 simulated function bool IsHatchBlocked()
 {
+    local int Yaw;
+
     if (Gun == none)
     {
         return false;
     }
 
-    if (Gun.CurrentAim.Yaw < HatchClearRange.Min || Gun.CurrentAim.Yaw > HatchClearRange.Max)
+    // CurrentAim.Yaw is 0-65535; HatchClearRange is signed
+    Yaw = Gun.CurrentAim.Yaw;
+
+    if (Yaw > 32767)
+    {
+        Yaw -= 65536;
+    }
+
+    if (Yaw < HatchClearRange.Min || Yaw > HatchClearRange.Max)
     {
         return true;
     }

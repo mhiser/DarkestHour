@@ -17,22 +17,6 @@ simulated function InitializeVehicleBase()
     }
 }
 
-// Modified to pass damage on to vehicle base, same as a vehicle cannon
-function TakeDamage(int Damage, Pawn InstigatedBy, Vector HitLocation, Vector Momentum, class<DamageType> DamageType, optional int HitIndex)
-{
-    super.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType, HitIndex);
-
-    if (Base != none)
-    {
-        if (DamageType.default.bDelayedDamage && InstigatedBy != none)
-        {
-            Base.SetDelayedDamageInstigatorController(InstigatedBy.Controller);
-        }
-
-        Base.TakeDamage(Damage, InstigatedBy, HitLocation, Momentum, DamageType);
-    }
-}
-
 function InitEffects()
 {
     local int i;

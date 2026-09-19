@@ -48,24 +48,13 @@ defaultproperties
     SecondarySpread=0.00127
     TertiarySpread=0.00357
 
-    // Coaxial MG ammo
-    AltFireProjectileClass=Class'DH_MG34Bullet'
-    InitialAltAmmo=150
-    NumMGMags=4
-    AltFireInterval=0.08
-    TracerProjectileClass=Class'DH_MG34TracerBullet'
-    TracerFrequency=7
-
     // Weapon fire
     WeaponFireOffset=5.5
-    AltFireOffset=(X=-167.0,Y=-10.0,Z=14.5)
 
     // Sounds
     CannonFireSound(0)=SoundGroup'Vehicle_Weapons.75mm_L_fire01'
     CannonFireSound(1)=SoundGroup'Vehicle_Weapons.75mm_L_fire02'
     CannonFireSound(2)=SoundGroup'Vehicle_Weapons.75mm_L_fire03'
-    AltFireSoundClass=sound'Inf_Weapons.mg34_p_fire_loop'
-    AltFireEndSound=SoundGroup'DH_WeaponSounds.mg34_fire_end'
     ReloadStages(0)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_01')
     ReloadStages(1)=(Sound=Sound'DH_Vehicle_Reloads.reload_01s_02')
     ReloadStages(2)=(Sound=Sound'DH_Vehicle_Reloads.reload_02s_03')

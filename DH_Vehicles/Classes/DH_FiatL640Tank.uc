@@ -47,7 +47,7 @@ defaultproperties
     DriveRot=(Yaw=16384)
     DriveAnim="fiatl640_driver_closed"
     DriverAttachmentBone="driver_attachment"
-    UnbuttonedPositionIndex=3
+    UnbuttonedPositionIndex=2
     bLockCameraDuringTransition=false
 
     // Hull armor
