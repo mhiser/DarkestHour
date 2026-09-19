@@ -235,11 +235,6 @@ function Timer()
     }
 }
 
-function int GetTimeout()
-{
-    return Timeout;
-}
-
 defaultproperties
 {
     Method="GET"
