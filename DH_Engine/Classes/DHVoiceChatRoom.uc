@@ -7,57 +7,20 @@ class DHVoiceChatRoom extends UnrealChatRoom;
 
 var     int     SquadIndex;
 var     float   LocalBroadcastRangeSquared;
-var     int     VoiceMemberMask[8]; // 256 bits; native GetMask() is only 32-bit
 
-function bool IsInVoiceMask(byte VoiceID)
+// Native GetMask() is 32-bit. VoiceIDs go to 254; shifting those wraps and corrupts bits 0-31.
+function bool CanUseNativeVoiceMask(byte VoiceID)
 {
-    if (VoiceID == 255)
-    {
-        return false;
-    }
-
-    return (VoiceMemberMask[VoiceID / 32] & (1 << (VoiceID & 31))) != 0;
-}
-
-function SetVoiceMaskBit(byte VoiceID, bool bSet)
-{
-    local int WordIndex, Bit;
-
-    if (VoiceID == 255)
-    {
-        return;
-    }
-
-    WordIndex = VoiceID / 32;
-    Bit = 1 << (VoiceID & 31);
-
-    if (bSet)
-    {
-        VoiceMemberMask[WordIndex] = VoiceMemberMask[WordIndex] | Bit;
-
-        if (VoiceID < 32)
-        {
-            SetMask(GetMask() | Bit);
-        }
-    }
-    else
-    {
-        VoiceMemberMask[WordIndex] = VoiceMemberMask[WordIndex] & ~Bit;
-
-        if (VoiceID < 32)
-        {
-            SetMask(GetMask() & ~Bit);
-        }
-    }
+    return VoiceID < 32;
 }
 
 // Called after LeaveChannel, or when player exits the server
 // NOTE: overridden to eliminate "has left channel" chat messages, & also to allow more than 32 VoiceIDs
 function RemoveMember(PlayerReplicationInfo PRI)
 {
-    if (PRI != none && PRI.VoiceID != 255 && IsMember(PRI, true))
+    if (PRI != none && PRI.VoiceID != 255 && CanUseNativeVoiceMask(PRI.VoiceID) && IsMember(PRI, true))
     {
-        SetVoiceMaskBit(PRI.VoiceID, false);
+        SetMask(GetMask() & ~(1 << PRI.VoiceID));
     }
 }
 
@@ -86,11 +49,10 @@ function AddMember(PlayerReplicationInfo PRI)
         }
     }
 
-    SetVoiceMaskBit(PRI.VoiceID, true);
-
     // VoiceChatRoom.AddMember uses 1<<VoiceID on a 32-bit mask; skip it for IDs >= 32.
-    if (PRI.VoiceID < 32)
+    if (CanUseNativeVoiceMask(PRI.VoiceID))
     {
+        SetMask(GetMask() | (1 << PRI.VoiceID));
         super(VoiceChatRoom).AddMember(PRI);
     }
 }
@@ -172,10 +134,6 @@ simulated event bool IsMember(PlayerReplicationInfo PRI, optional bool bNoCascad
         else if (IsUnassignedChannel() && !MyPRI.IsInSquad())
         {
             // If this is an unassigned channel and we are NOT in a squad, then return true
-            return true;
-        }
-        else if (IsInVoiceMask(PRI.VoiceID))
-        {
             return true;
         }
     }
