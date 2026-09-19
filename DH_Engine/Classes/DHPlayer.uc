@@ -2295,6 +2295,38 @@ ignores SeePlayer, HearNoise, Bump;
     }
 }
 
+// Returns true only if a pickup/spawner actually gave inventory
+function bool TryUseInventoryActor(Actor A)
+{
+    local DHWeaponPickup WP;
+    local DHInventorySpawner Spawner;
+    local int OldPickupCount;
+
+    if (A == none)
+    {
+        return false;
+    }
+
+    WP = DHWeaponPickup(A);
+
+    if (WP != none)
+    {
+        return WP.TryUsedBy(Pawn);
+    }
+
+    Spawner = DHInventorySpawner(A);
+
+    if (Spawner != none)
+    {
+        OldPickupCount = Spawner.PickupCount;
+        Spawner.UsedBy(Pawn);
+
+        return Spawner.PickupCount < OldPickupCount;
+    }
+
+    return false;
+}
+
 // Modified so player can enter vehicle if looking at one of its vehicle weapons (generally a turret), not just its hull/base
 // In particular this makes it much easier to enter AT guns, which can have a very small base & a large 'turret'
 function ServerUse()
@@ -2364,6 +2396,25 @@ function ServerUse()
             // Otherwise try to use whatever other actor player is looking at
             else
             {
+                // Unusable pickups still consume AutoTrace Use and block items underneath
+                if (DHWeaponPickup(LookedAtActor) != none || DHInventorySpawner(LookedAtActor) != none)
+                {
+                    if (TryUseInventoryActor(LookedAtActor))
+                    {
+                        return;
+                    }
+
+                    foreach Pawn.TouchingActors(Class'Actor', A)
+                    {
+                        if (A != LookedAtActor && TryUseInventoryActor(A))
+                        {
+                            return;
+                        }
+                    }
+
+                    return;
+                }
+
                 LookedAtActor.UsedBy(Pawn);
 
                 return;
