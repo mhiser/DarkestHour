@@ -1458,7 +1458,8 @@ simulated function bool IsInGroup()
 // Clients/Server can run this function very fast because of the hashtable
 simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, int TeamIndex)
 {
-    local int i;
+    local int i, RequiredObjNum;
+    local DHObjective RequiredObj;
 
     if (GRI == none)
     {
@@ -1469,7 +1470,16 @@ simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, 
     {
         for (i = 0; i < AxisRequiredObjForCapture.Length; ++i)
         {
-            if (!GRI.DHObjectives[AxisRequiredObjForCapture[i]].IsAxis())
+            RequiredObjNum = AxisRequiredObjForCapture[i];
+
+            if (RequiredObjNum < 0 || RequiredObjNum >= arraycount(GRI.DHObjectives))
+            {
+                continue;
+            }
+
+            RequiredObj = GRI.DHObjectives[RequiredObjNum];
+
+            if (RequiredObj != none && !RequiredObj.IsAxis())
             {
                 return false;
             }
@@ -1479,7 +1489,16 @@ simulated function bool HasRequiredObjectives(coerce DHGameReplicationInfo GRI, 
     {
         for (i = 0; i < AlliesRequiredObjForCapture.Length; ++i)
         {
-            if (!GRI.DHObjectives[AlliesRequiredObjForCapture[i]].IsAllies())
+            RequiredObjNum = AlliesRequiredObjForCapture[i];
+
+            if (RequiredObjNum < 0 || RequiredObjNum >= arraycount(GRI.DHObjectives))
+            {
+                continue;
+            }
+
+            RequiredObj = GRI.DHObjectives[RequiredObjNum];
+
+            if (RequiredObj != none && !RequiredObj.IsAllies())
             {
                 return false;
             }
