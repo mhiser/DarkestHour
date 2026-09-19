@@ -24,10 +24,13 @@ static function string GetString(optional int Switch, optional PlayerReplication
     {
         case 0:
             S = Repl(S, "{0}", default.IncreasedText);
+            break;
         case 1:
             S = Repl(S, "{0}", default.DecreasedText);
+            break;
         case 2:
             S = Repl(S, "{0}", default.ChangedText);
+            break;
         default:
             S = Repl(S, "{0}", default.ChangedText);
     }
