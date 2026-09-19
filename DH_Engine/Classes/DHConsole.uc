@@ -1068,10 +1068,18 @@ function bool CanUseOrderCommands()
 function bool CanUseVehicleCommands()
 {
     local Pawn P;
+    local DHVehicle V;
 
     P = ViewportOwner.Actor.Pawn;
 
-    return P != none && (P.IsA('ROVehicle') || P.IsA('ROVehicleWeaponPawn')) && !P.IsA('DHPassengerPawn');
+    if (P == none || P.IsA('DHPassengerPawn'))
+    {
+        return false;
+    }
+
+    V = Class'DHVehicle'.static.GetDrivenVehicleBase(P);
+
+    return V != none && V.AllowVehicleCommands();
 }
 
 state ConsoleVisible

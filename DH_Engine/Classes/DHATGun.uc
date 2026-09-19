@@ -64,6 +64,11 @@ simulated function Tick(float DeltaTime)
     Disable('Tick');
 }
 
+simulated function bool AllowVehicleCommands()
+{
+    return false;
+}
+
 // Modified so we always use this actor & rely on its modified TryToDrive() function to control entry to the gun
 function Vehicle FindEntryVehicle(Pawn P)
 {
