@@ -23,9 +23,11 @@ function InitComponent(GUIController MyController, GUIComponent MyOwner)
 
     i_BG1.UnmanageComponent(ch_ShowMapUpdatedText);
     i_BG1.UnmanageComponent(ch_ShowMapFirstSpawn);
+    i_BG1.UnmanageComponent(nu_MsgScale);
 
     RemoveComponent(ch_ShowMapUpdatedText);
     RemoveComponent(ch_ShowMapFirstSpawn);
+    RemoveComponent(nu_MsgScale);
 
     i_BG2.ManageComponent(ch_SimpleColours);
     i_BG2.ManageComponent(ch_ShowChatMessages);
@@ -546,23 +548,6 @@ defaultproperties
     End Object
     nu_MsgCount=DHmoNumericEdit'DH_Interface.GameHudMessageCount'
 
-    Begin Object Class=DHmoNumericEdit Name=GameHudMessageScale
-        MinValue=0
-        MaxValue=8
-        ComponentJustification=TXTA_Left
-        CaptionWidth=0.7
-        Caption="Chat Font Size"
-        OnCreateComponent=GameHudMessageScale.InternalOnCreateComponent
-        IniOption="@Internal"
-        WinTop=0.321874
-        WinLeft=0.550781
-        WinWidth=0.38125
-        TabOrder=10
-        OnChange=DHTab_Hud.InternalOnChange
-        OnLoadINI=DHTab_Hud.InternalOnLoadINI
-    End Object
-    nu_MsgScale=DHmoNumericEdit'DH_Interface.GameHudMessageScale'
-
     Begin Object Class=DHmoNumericEdit Name=GameHudMessageOffset
         MinValue=0
         MaxValue=4
@@ -574,7 +559,7 @@ defaultproperties
         WinTop=0.436457
         WinLeft=0.550781
         WinWidth=0.38125
-        TabOrder=11
+        TabOrder=10
         OnChange=DHTab_Hud.InternalOnChange
         OnLoadINI=DHTab_Hud.InternalOnLoadINI
     End Object
