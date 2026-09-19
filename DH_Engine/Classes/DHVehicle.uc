@@ -521,18 +521,34 @@ function Died(Controller Killer, class<DamageType> DamageType, Vector HitLocatio
         MapIconAttachment.Destroy();
     }
 
-    DHKiller = DHPlayer(Killer);
-
-    if (DHG == none || GRI == none || DHKiller == none)
+    if (DHG == none || GRI == none)
     {
         return;
     }
 
-    // Handle reinforcement loss for the vehicle
+    // Handle reinforcement loss for the vehicle (independent of killer attribution)
     if (ReinforcementCost != 0)
     {
         // Deducts reinforcements based on the vehicle's "reinforcement cost"
         DHG.ModifyReinforcements(VehicleTeam, -ReinforcementCost);
+    }
+
+    DHKiller = DHPlayer(Killer);
+
+    // Attacker may have died first (satchel delay, fire); their Controller still exists while spectating
+    if (DHKiller == none && DamageType != Class'Suicided')
+    {
+        DHKiller = DHPlayer(DelayedDamageInstigatorController);
+
+        if (DHKiller == none)
+        {
+            DHKiller = DHPlayer(LastHitBy);
+        }
+    }
+
+    if (DHKiller == none)
+    {
+        return;
     }
 
     // If is not a team kill and the vehicle is NOT spawn protected, then +score for killer
