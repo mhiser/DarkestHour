@@ -179,6 +179,11 @@ function int LimitPawnPitch(int pitch) { return pitch; }
 function Fire(optional float F);
 event CheckReset();
 
+simulated function bool AllowVehicleCommands()
+{
+    return false;
+}
+
 defaultproperties
 {
     bNeverReset=true

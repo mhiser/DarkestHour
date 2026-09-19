@@ -4431,6 +4431,12 @@ simulated static function DHVehicle GetDrivenVehicleBase(Pawn P)
     }
 }
 
+// Override in stationary weapons so they do not show tank orders/alerts.
+simulated function bool AllowVehicleCommands()
+{
+    return true;
+}
+
 // Override in subclasses to handle the change in the number of rounds remaining.
 // We use this to hide ammo.
 simulated function OnTotalRoundsRemainingChanged(int Count);
