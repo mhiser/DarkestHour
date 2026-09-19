@@ -26,6 +26,7 @@ var     Vector                  BarrelSteamEmitterOffset; // offset for the emit
 var     StaticMesh              EmptyStaticMesh;
 
 var    bool                     bWaitingToBolt;
+var    bool                     bGaveInventory; // Actor.UsedBy is void, so success is stored here
 
 replication
 {
@@ -80,6 +81,25 @@ auto state Pickup
                super.ValidTouch(Other);
     }
 
+    function UsedBy(Pawn User)
+    {
+        local Inventory Copy;
+
+        if (ValidTouch(User))
+        {
+            Copy = SpawnCopy(User);
+
+            if (Copy != none)
+            {
+                Copy.PickupFunction(User);
+            }
+
+            bGaveInventory = true;
+            AnnouncePickup(User);
+            SetRespawn();
+        }
+    }
+
     function Timer()
     {
         // Only goto 'FadeOut' if no one is nearby, else try again shortly
@@ -92,6 +112,16 @@ auto state Pickup
             SetTimer(PlayerNearbyRetryTime, false);
         }
     }
+}
+
+// UsedBy is void on Actor; this reports whether the pickup was actually taken
+function bool TryUsedBy(Pawn User)
+{
+    bGaveInventory = false;
+    UsedBy(User);
+
+    // Also treat HandlePickupQuery ammo-resupply as consuming this pickup
+    return bGaveInventory || bDeleteMe || !IsInState('Pickup');
 }
 
 // New function that returns true if players are nearby

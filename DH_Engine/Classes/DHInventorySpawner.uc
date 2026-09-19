@@ -210,6 +210,8 @@ function UsedBy(Pawn User)
 {
     local Weapon Weapon;
     local Pickup Pickup;
+    local DHWeaponPickup WP;
+    local bool bGaveItem;
 
     if (!CanBeUsedByPawn(User) || PickupCount == 0)
     {
@@ -225,14 +227,33 @@ function UsedBy(Pawn User)
         return;
     }
 
+    WP = DHWeaponPickup(Pickup);
+
     Pickup.InitDroppedPickupFor(Weapon);
     Pickup.GotoState('Pickup', 'Begin');
-    Pickup.UsedBy(User);
 
-    if (Pickup != none)
+    if (WP != none)
+    {
+        bGaveItem = WP.TryUsedBy(User);
+    }
+    else
+    {
+        Pickup.UsedBy(User);
+        bGaveItem = Pickup == none || Pickup.bDeleteMe;
+    }
+
+    if (Weapon != none)
     {
         Weapon.Destroy();
+    }
+
+    if (Pickup != none && !Pickup.bDeleteMe)
+    {
         Pickup.Destroy();
+    }
+
+    if (!bGaveItem)
+    {
         return;
     }
 

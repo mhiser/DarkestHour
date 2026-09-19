@@ -131,28 +131,6 @@ function InitPickup()
     }
 }
 
-// Modified to call SetRespawn() instead of destroying the pickup
-auto state Pickup
-{
-    function UsedBy(Pawn User)
-    {
-        local Inventory Copy;
-
-        if (ValidTouch(User))
-        {
-            Copy = SpawnCopy(User);
-
-            if (Copy != none)
-            {
-                Copy.PickupFunction(User);
-            }
-
-            AnnouncePickup(User);
-            SetRespawn();
-        }
-    }
-}
-
 // Modified so pickup only re-spawns if specified ReSpawnTime is not zero
 // Allows mapper to specify zero to signify the weapon pickup should never re-spawn
 // But even if it won't re-spawn we don't destroy the pickup, we just leave it sleeping, because if the round gets reset it can then be reactivated & the item re-spawned
