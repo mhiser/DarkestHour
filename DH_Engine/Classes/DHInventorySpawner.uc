@@ -242,18 +242,18 @@ function UsedBy(Pawn User)
         bGaveItem = Pickup == none || Pickup.bDeleteMe;
     }
 
+    if (Weapon != none)
+    {
+        Weapon.Destroy();
+    }
+
+    if (Pickup != none && !Pickup.bDeleteMe)
+    {
+        Pickup.Destroy();
+    }
+
     if (!bGaveItem)
     {
-        if (Weapon != none)
-        {
-            Weapon.Destroy();
-        }
-
-        if (Pickup != none && !Pickup.bDeleteMe)
-        {
-            Pickup.Destroy();
-        }
-
         return;
     }
 
