@@ -9,7 +9,7 @@ defaultproperties
 {
     Skins(2)=Texture'DHGermanCharactersTex.SS_Autumn'  //shirt
 
-    BodySkins(2)=Texture'DHGermanCharactersTex.SS_Autumn'
+    BodySkins(0)=Texture'DHGermanCharactersTex.SS_Autumn'
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 }

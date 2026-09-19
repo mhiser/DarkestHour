@@ -10,6 +10,6 @@ defaultproperties
     Skins(0)=Texture'DHGermanCharactersTex.SSPanzer2'
 
     BodySkins(0)=Texture'DHGermanCharactersTex.SSPanzer2'
-    BodySkins(2)=Texture'DHGermanCharactersTex.SSPanzer3'
-    BodySkins(5)=Texture'DHGermanCharactersTex.SSPanzer6'
+    BodySkins(1)=Texture'DHGermanCharactersTex.SSPanzer3'
+    BodySkins(2)=Texture'DHGermanCharactersTex.SSPanzer6'
 }
