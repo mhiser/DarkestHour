@@ -86,6 +86,15 @@ function OnInputChange(GUIComponent Sender)
         SampleRateString = Left(SampleRateString, InStr(SampleRateString, "."));
         SampleRateString = "0.00" $ SampleRateString;
         PC.ConsoleCommand("set Engine.PlayerInput MouseSamplingTime" @ SampleRateString);
+        Class'PlayerInput'.default.MouseSamplingTime = float(SampleRateString);
+        Class'DHPlayerInput'.default.MouseSamplingTime = float(SampleRateString);
+        Class'PlayerInput'.static.StaticSaveConfig();
+        Class'DHPlayerInput'.static.StaticSaveConfig();
+
+        if (PC.PlayerInput != none)
+        {
+            PC.PlayerInput.MouseSamplingTime = float(SampleRateString);
+        }
     }
     else if (Sender == fl_IronSightFactor)
     {
@@ -95,6 +104,11 @@ function OnInputChange(GUIComponent Sender)
         {
             DHPlayer(PC).DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();
             DHPlayer(PC).SaveConfig();
+        }
+        else
+        {
+            Class'DHPlayer'.default.DHISTurnSpeedFactor = fl_IronSightFactor.GetValue();
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
     else if (Sender == fl_BipodFactor)
@@ -106,6 +120,11 @@ function OnInputChange(GUIComponent Sender)
             DHPlayer(PC).DHBipodTurnSpeedFactor = fl_BipodFactor.GetValue();
             DHPlayer(PC).SaveConfig();
         }
+        else
+        {
+            Class'DHPlayer'.default.DHBipodTurnSpeedFactor = fl_BipodFactor.GetValue();
+            Class'DHPlayer'.static.StaticSaveConfig();
+        }
     }
     else if (Sender == fl_ScopedFactor)
     {
@@ -116,15 +135,25 @@ function OnInputChange(GUIComponent Sender)
             DHPlayer(PC).DHScopeTurnSpeedFactor = fl_ScopedFactor.GetValue();
             DHPlayer(PC).SaveConfig();
         }
+        else
+        {
+            Class'DHPlayer'.default.DHScopeTurnSpeedFactor = fl_ScopedFactor.GetValue();
+            Class'DHPlayer'.static.StaticSaveConfig();
+        }
     }
     else if (Sender == ch_KeepMovingWhileTyping)
     {
-        PC.ConsoleCommand("set DH_Engine.DHPlayer KeepMovingWhileTyping" @ ch_KeepMovingWhileTyping.IsChecked());
+        PC.ConsoleCommand("set DH_Engine.DHPlayer bKeepMovingWhileTyping" @ ch_KeepMovingWhileTyping.IsChecked());
 
         if (DHPlayer(PC) != none)
         {
             DHPlayer(PC).bKeepMovingWhileTyping = ch_KeepMovingWhileTyping.IsChecked();
             DHPlayer(PC).SaveConfig();
+        }
+        else
+        {
+            Class'DHPlayer'.default.bKeepMovingWhileTyping = ch_KeepMovingWhileTyping.IsChecked();
+            Class'DHPlayer'.static.StaticSaveConfig();
         }
     }
 }
@@ -135,6 +164,7 @@ function SaveSettings()
     local PlayerController PC;
     local DHPlayer DHP;
     local bool bSave, bPlayerSave, bInputSave, bIForce, bKeepMovingWhileTyping;
+    local float MouseSamplingTime, IronSightFactor, BipodFactor, ScopedFactor;
 
     super(Settings_Tabs).SaveSettings();
 
@@ -147,6 +177,9 @@ function SaveSettings()
     }
 
     bKeepMovingWhileTyping = ch_KeepMovingWhileTyping.IsChecked();
+    IronSightFactor = fl_IronSightFactor.GetValue();
+    BipodFactor = fl_BipodFactor.GetValue();
+    ScopedFactor = fl_ScopedFactor.GetValue();
 
     DHP = DHPlayer(PC);
 
@@ -157,6 +190,24 @@ function SaveSettings()
             DHP.bKeepMovingWhileTyping = bKeepMovingWhileTyping;
             bSave = true;
         }
+
+        if (DHP.DHISTurnSpeedFactor != IronSightFactor)
+        {
+            DHP.DHISTurnSpeedFactor = IronSightFactor;
+            bSave = true;
+        }
+
+        if (DHP.DHBipodTurnSpeedFactor != BipodFactor)
+        {
+            DHP.DHBipodTurnSpeedFactor = BipodFactor;
+            bSave = true;
+        }
+
+        if (DHP.DHScopeTurnSpeedFactor != ScopedFactor)
+        {
+            DHP.DHScopeTurnSpeedFactor = ScopedFactor;
+            bSave = true;
+        }
     }
     else
     {
@@ -164,6 +215,48 @@ function SaveSettings()
         {
             Class'DHPlayer'.default.bKeepMovingWhileTyping = bKeepMovingWhileTyping;
             bPlayerSave = true;
+        }
+
+        if (Class'DHPlayer'.default.DHISTurnSpeedFactor != IronSightFactor)
+        {
+            Class'DHPlayer'.default.DHISTurnSpeedFactor = IronSightFactor;
+            bPlayerSave = true;
+        }
+
+        if (Class'DHPlayer'.default.DHBipodTurnSpeedFactor != BipodFactor)
+        {
+            Class'DHPlayer'.default.DHBipodTurnSpeedFactor = BipodFactor;
+            bPlayerSave = true;
+        }
+
+        if (Class'DHPlayer'.default.DHScopeTurnSpeedFactor != ScopedFactor)
+        {
+            Class'DHPlayer'.default.DHScopeTurnSpeedFactor = ScopedFactor;
+            bPlayerSave = true;
+        }
+    }
+
+    if (nu_MousePollRate.GetValue() >= nu_MousePollRate.MinValue)
+    {
+        MouseSamplingTime = 1.0 / float(nu_MousePollRate.GetValue());
+
+        if (Class'PlayerInput'.default.MouseSamplingTime != MouseSamplingTime)
+        {
+            Class'PlayerInput'.default.MouseSamplingTime = MouseSamplingTime;
+            PC.ConsoleCommand("set Engine.PlayerInput MouseSamplingTime" @ MouseSamplingTime);
+            bInputSave = true;
+        }
+
+        if (Class'DHPlayerInput'.default.MouseSamplingTime != MouseSamplingTime)
+        {
+            Class'DHPlayerInput'.default.MouseSamplingTime = MouseSamplingTime;
+            bInputSave = true;
+        }
+
+        if (PC.PlayerInput != none && PC.PlayerInput.MouseSamplingTime != MouseSamplingTime)
+        {
+            PC.PlayerInput.MouseSamplingTime = MouseSamplingTime;
+            bInputSave = true;
         }
     }
 
@@ -260,12 +353,13 @@ function SaveSettings()
 
     if (bPlayerSave)
     {
-        class'Player'.static.StaticSaveConfig();
+        Class'DHPlayer'.static.StaticSaveConfig();
     }
 
     if (bInputSave)
     {
         Class'PlayerInput'.static.StaticSaveConfig();
+        Class'DHPlayerInput'.static.StaticSaveConfig();
     }
 
     if (bIForce)
@@ -379,7 +473,7 @@ defaultproperties
         WinWidth=0.3
         WinHeight=0.04
         TabOrder=7
-        OnChange=DHTab_Input.InternalOnChange
+        OnChange=OnInputChange
         OnLoadINI=DHTab_Input.InternalOnLoadINI
     End Object
     ch_KeepMovingWhileTyping=DHmoCheckBox'DH_Interface.DHTab_Input.KeepMovingWhileTyping'

@@ -102,7 +102,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             break;
 
         case ch_UseNativeItemNames:
-            if (H != none)
+            if (DHP != none)
             {
                 bUseNativeItemNames = DHP.bUseNativeItemNames;
             }
@@ -110,6 +110,7 @@ function InternalOnLoadINI(GUIComponent Sender, string s)
             {
                 bUseNativeItemNames = Class'DHPlayer'.default.bUseNativeItemNames;
             }
+            bUseNativeItemNamesD = bUseNativeItemNames;
             ch_UseNativeItemNames.SetComponentValue(bUseNativeItemNames,true);
             break;
         case ch_ShowCompass:
