@@ -1301,6 +1301,11 @@ exec function ThrowMGAmmo()
         {
             ServerThrowMortarAmmo(DHMortarVehicle(ROPawn(Pawn).AutoTraceActor));
         }
+        else if (DHMortarVehicleWeaponPawn(MyPawn.AutoTraceActor) != none)
+        {
+            // AutoTrace usually hits the operator pawn, not the mortar vehicle
+            ServerThrowMortarAmmo(DHMortarVehicle(DHMortarVehicleWeaponPawn(MyPawn.AutoTraceActor).VehicleBase));
+        }
     }
 }
 

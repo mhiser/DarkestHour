@@ -1805,7 +1805,7 @@ function TossMortarVehicleAmmo(DHMortarVehicle V)
 
 function bool ResupplyMortarVehicleWeapon(DHMortarVehicle V)
 {
-    if (V != none || DHMortarVehicleWeaponPawn(V.WeaponPawns[0]) != none)
+    if (V != none && DHMortarVehicleWeaponPawn(V.WeaponPawns[0]) != none)
     {
         return V.WeaponPawns[0].ResupplyAmmo();
     }
