@@ -127,25 +127,25 @@ function SetupATGunGroup()
 // New function for the master factory to initially reset all AT gun factories in the group & then randomly select the required no. to be activated
 function ResetAndRandomizeATGunGroup()
 {
-    local array<DHATGunFactory> TempGunFactories;
-    local int                   RandomArrayPosition, i;
+    local array<int> RemainingIndexes;
+    local int        RandomArrayPosition, i;
 
     // Initially reset all the group factories
     for (i = 0; i < GunFactories.Length; ++i)
     {
         GunFactories[i].TotalSpawnedVehicles = 0;
         GunFactories[i].Deactivate();
+        RemainingIndexes[i] = i;
     }
 
     SelectedFactoryIndexes.Length = 0; // clear any previous array
-    TempGunFactories = GunFactories;   // make temp copy of GunFactories array so we can alter it without messing up the original
 
-    // Make the specified no. of random selections from temp array, each time removing the selected factory so it can't be chosen again
+    // Pick from remaining original GunFactories indexes so later selections stay unique after Remove
     for (i = 0; i < NumToActivate; ++i)
     {
-        RandomArrayPosition = Rand(TempGunFactories.Length);
-        SelectedFactoryIndexes[SelectedFactoryIndexes.Length] = RandomArrayPosition; // add to list of selected factory index positions
-        TempGunFactories.Remove(RandomArrayPosition, 1);
+        RandomArrayPosition = Rand(RemainingIndexes.Length);
+        SelectedFactoryIndexes[SelectedFactoryIndexes.Length] = RemainingIndexes[RandomArrayPosition];
+        RemainingIndexes.Remove(RandomArrayPosition, 1);
     }
 }
 
