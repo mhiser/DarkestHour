@@ -2717,7 +2717,7 @@ state RoundInPlay
         {
             if (DHObjectives[i] == none)
             {
-                break;
+                continue;
             }
             else if (DHObjectives[i].IsAxis())
             {
@@ -4477,7 +4477,7 @@ function ChooseWinner()
     {
         if (DHObjectives[i] == none)
         {
-            break;
+            continue;
         }
         else if (DHObjectives[i].IsAxis())
         {
