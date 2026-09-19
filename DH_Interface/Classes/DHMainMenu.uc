@@ -19,7 +19,7 @@ var automated       ROGUIProportionalContainerNoSkin c_MOTD;
 
 var array<ExtendedConsole.ServerFavorite> StaticFavorites;
 
-var     HTTPRequest             MOTDRequest;
+var     bool                    bMOTDRequestInFlight;
 
 var     string                  MOTDURL;
 var     string                  FacebookURL;
@@ -496,7 +496,12 @@ function OnMOTDResponse(HTTPRequest Request, int Status, TreeMap_string_string H
         tb_MOTDContent.MyScrollText.SetContent(Repl(default.MOTDErrorString, "{0}", Status));
     }
 
-    MOTDRequest = none;
+    bMOTDRequestInFlight = false;
+
+    if (Request != none)
+    {
+        Request.Destroy();
+    }
 
     i_MOTDLoading.SetVisibility(false);
 }
@@ -519,7 +524,9 @@ event Timer()
 
 function GetMOTD()
 {
-    if (MOTDRequest != none)
+    local HTTPRequest MOTDRequest;
+
+    if (bMOTDRequestInFlight)
     {
         return;
     }
@@ -529,6 +536,8 @@ function GetMOTD()
     MOTDRequest.Path = "/announcements/latest/";
     MOTDRequest.OnResponse = OnMOTDResponse;
     MOTDRequest.Send();
+
+    bMOTDRequestInFlight = true;
 
     b_MOTDTitle.Caption = "";
     tb_MOTDContent.MyScrollText.SetContent("");
