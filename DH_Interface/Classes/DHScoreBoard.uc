@@ -456,7 +456,7 @@ private static function bool PRIComparatorFunction(Object A, Object B)
     }
 
     // But if scores are the same, they are out of order if player 2's deaths is lower
-    if (P1.Deaths != P1.Deaths)
+    if (P1.Deaths != P2.Deaths)
     {
         return P2.Deaths < P1.Deaths;
     }

@@ -205,6 +205,11 @@ function string GetSortString(int i)
     local DHMapDatabase.SMapInfo MI;
     local bool bHasMapInfo;
 
+    if (VRI == none || i < 0 || i >= MapVoteData.Length || MapVoteData[i] < 0 || MapVoteData[i] >= VRI.MapList.Length)
+    {
+        return "";
+    }
+
     PC = DHPlayer(PlayerOwner());
 
     if (PC != none)
@@ -213,15 +218,14 @@ function string GetSortString(int i)
 
         if (MD != none)
         {
-            bHasMapInfo = MD.GetMapInfo(VRI.MapList[i].MapName, MI);
+            bHasMapInfo = MD.GetMapInfo(VRI.MapList[MapVoteData[i]].MapName, MI);
         }
     }
-
 
     switch (SortColumn)
     {
         case 0: // Map name
-            return Locs(Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[i].MapName));
+            return Locs(Class'DHMapDatabase'.static.GetHumanReadableMapName(VRI.MapList[MapVoteData[i]].MapName));
         case 1: // Allied country
             if (bHasMapInfo)
             {
