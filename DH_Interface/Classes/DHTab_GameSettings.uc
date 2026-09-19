@@ -342,13 +342,6 @@ function SaveSettings()
     // Spawn with bayonet
     bSpawnWithBayonet = ch_BayonetAtStart.IsChecked();
 
-    if (DHP != none && DHP.bSpawnWithBayonet != bSpawnWithBayonet)
-    {
-        DHP.bSpawnWithBayonet = bSpawnWithBayonet;
-        DHP.ServerSetBayonetAtSpawn(bSpawnWithBayonet);
-        bSaveConfig = true;
-    }
-
     bIncognito = ch_Incognito.IsChecked();
 
     // Vehicle settings
@@ -360,6 +353,13 @@ function SaveSettings()
 
     if (DHP != none)
     {
+        if (DHP.bSpawnWithBayonet != bSpawnWithBayonet)
+        {
+            DHP.bSpawnWithBayonet = bSpawnWithBayonet;
+            DHP.ServerSetBayonetAtSpawn(bSpawnWithBayonet);
+            bSaveConfig = true;
+        }
+
         if (DHP.bInterpolatedTankThrottle != bTankThrottle)
         {
             DHP.bInterpolatedTankThrottle = bTankThrottle;
@@ -400,6 +400,12 @@ function SaveSettings()
     }
     else
     {
+        if (Class'DHPlayer'.default.bSpawnWithBayonet != bSpawnWithBayonet)
+        {
+            Class'DHPlayer'.default.bSpawnWithBayonet = bSpawnWithBayonet;
+            bStaticSaveConfig = true;
+        }
+
         if (Class'DHPlayer'.default.bInterpolatedTankThrottle != bTankThrottle)
         {
             Class'DHPlayer'.default.bInterpolatedTankThrottle = bTankThrottle;
@@ -514,6 +520,7 @@ function ResetClicked()
         DHP.bLockTankOnEntry = Class'DHPlayer'.default.bLockTankOnEntry;
         DHP.AutomaticVehicleAlerts = Class'DHPlayer'.default.AutomaticVehicleAlerts;
         DHP.bIsIncognito = Class'DHPlayer'.default.bIsIncognito;
+        DHP.bSpawnWithBayonet = Class'DHPlayer'.default.bSpawnWithBayonet;
     }
 
     for (i = 0; i < Components.Length; ++i)
