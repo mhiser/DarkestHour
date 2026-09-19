@@ -7,7 +7,7 @@ class DH_Fiat1435GunFactory extends DHATGunFactory;
 
 defaultproperties
 {
-    VehicleClass=Class'DH_Fiat1435Gun'
+    VehicleClass=Class'DH_Fiat1435Gun_AC'
     Mesh=SkeletalMesh'DH_Fiat1435_anm.fiat1435_tripod_3rd'
     TeamNum=AXIS
 }
