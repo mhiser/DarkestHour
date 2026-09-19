@@ -754,6 +754,52 @@ exec function SquadJoinAuto()
     ServerSquadJoinAuto();
 }
 
+exec function ForgiveTeamKill()
+{
+    SelectPromptOption("ForgiveTeamKill");
+}
+
+exec function PunishTeamKill()
+{
+    SelectPromptOption("PunishTeamKill");
+}
+
+exec function AcceptSquadInvite()
+{
+    SelectPromptOption("AcceptSquadInvite");
+}
+
+exec function DeclineSquadInvite()
+{
+    SelectPromptOption("DeclineSquadInvite");
+}
+
+exec function IgnoreSquadInvites()
+{
+    SelectPromptOption("IgnoreSquadInvites");
+}
+
+function SelectPromptOption(string Command)
+{
+    local int i;
+    local DHPromptInteraction Prompt;
+
+    if (Player == none || Command == "")
+    {
+        return;
+    }
+
+    for (i = 0; i < Player.LocalInteractions.Length; ++i)
+    {
+        Prompt = DHPromptInteraction(Player.LocalInteractions[i]);
+
+        if (Prompt != none && Prompt.SelectOptionByCommand(Command))
+        {
+            return;
+        }
+    }
+}
+
 // Modified to remove pausing in singleplayer and to open the correct menu
 function ShowMidGameMenu(bool bPause)
 {
