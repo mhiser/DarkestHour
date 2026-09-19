@@ -5,6 +5,7 @@
 
 class DHConstruction extends Actor
     dependson(DHConstructionTypes)
+    dependson(DHConstructionSupplyAttachment)
     abstract
     placeable;
 
@@ -135,6 +136,7 @@ var     bool    bDummyOnConstruction;           // If true, this actor will be p
 var     int     Progress;                       // The current count of progress
 var     int     ProgressMax;                    // The amount of construction points required to be built
 var     bool    bShouldRefundSuppliesOnTearDown;
+var     array<DHConstructionSupplyAttachment.Withdrawal> SupplyWithdrawals; // server-only; supplies taken at placement so tear-down can refund them
 
 // Stagnation
 var     bool    bCanDieOfStagnation;            // If true, this construction will automatically destroy if no progress has been made for the amount of seconds specified in StagnationLifespan
@@ -618,28 +620,74 @@ function array<DHConstructionSupplyAttachment> GetTouchingSupplyAttachments(int 
 function int RefundSupplies(Pawn Instigator)
 {
     local int i;
-    local int MySupplyCost;
-    local int SuppliesToRefund, SuppliesRefunded;
+    local int RemainingToRefund, SuppliesToRefund, SuppliesRefunded;
     local array<DHConstructionSupplyAttachment> Attachments;
+    local DHPawn P;
     local UComparator AttachmentComparator;
-
-    MySupplyCost = GetSupplyCost(GetContext());
 
     if (IsPlacedByPlayer() && (TeamIndex == NEUTRAL_TEAM_INDEX || TeamIndex == Instigator.GetTeamNum()))
     {
-        // Sort the supply attachments by priority.
-        Attachments = GetTouchingSupplyAttachments(Instigator.GetTeamNum());
-        AttachmentComparator = new Class'UComparator';
-        AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
-        Class'USort'.static.Sort(Attachments, AttachmentComparator);
-
-        // Refund supplies to the touching supply attachments.
-        for (i = 0; i < Attachments.Length && MySupplyCost > 0; ++i)
+        // Refund the original placement withdrawals first so the paying
+        // attachment gets supplies back even if it does not overlap us.
+        for (i = 0; i < SupplyWithdrawals.Length; ++i)
         {
-            SuppliesToRefund = Min(MySupplyCost, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
-            Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
-            SuppliesRefunded += SuppliesToRefund;
-            MySupplyCost -= SuppliesToRefund;
+            RemainingToRefund += SupplyWithdrawals[i].Amount;
+
+            if (SupplyWithdrawals[i].Attachment != none && SupplyWithdrawals[i].Attachment.GetTeamIndex() == Instigator.GetTeamNum())
+            {
+                SuppliesToRefund = Min(SupplyWithdrawals[i].Amount, SupplyWithdrawals[i].Attachment.SupplyCountMax - SupplyWithdrawals[i].Attachment.GetSupplyCount());
+                SupplyWithdrawals[i].Attachment.SetSupplyCount(SupplyWithdrawals[i].Attachment.GetSupplyCount() + SuppliesToRefund);
+                SuppliesRefunded += SuppliesToRefund;
+                RemainingToRefund -= SuppliesToRefund;
+            }
+        }
+
+        if (SupplyWithdrawals.Length == 0)
+        {
+            RemainingToRefund = GetSupplyCost(GetContext());
+        }
+
+        if (RemainingToRefund > 0)
+        {
+            AttachmentComparator = new Class'UComparator';
+            AttachmentComparator.CompareFunction = Class'DHConstructionSupplyAttachment'.static.CompareFunction;
+
+            // Fall back to friendly attachments the tearing-down player can use.
+            P = DHPawn(Instigator);
+
+            if (P != none)
+            {
+                Attachments = P.TouchingSupplyAttachments;
+                Class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+                for (i = 0; i < Attachments.Length && RemainingToRefund > 0; ++i)
+                {
+                    if (Attachments[i] == none || Attachments[i].GetTeamIndex() != Instigator.GetTeamNum())
+                    {
+                        continue;
+                    }
+
+                    SuppliesToRefund = Min(RemainingToRefund, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
+                    Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
+                    SuppliesRefunded += SuppliesToRefund;
+                    RemainingToRefund -= SuppliesToRefund;
+                }
+            }
+
+            // Remaining capacity on attachments overlapping this construction.
+            if (RemainingToRefund > 0)
+            {
+                Attachments = GetTouchingSupplyAttachments(Instigator.GetTeamNum());
+                Class'USort'.static.Sort(Attachments, AttachmentComparator);
+
+                for (i = 0; i < Attachments.Length && RemainingToRefund > 0; ++i)
+                {
+                    SuppliesToRefund = Min(RemainingToRefund, Attachments[i].SupplyCountMax - Attachments[i].GetSupplyCount());
+                    Attachments[i].SetSupplyCount(Attachments[i].GetSupplyCount() + SuppliesToRefund);
+                    SuppliesRefunded += SuppliesToRefund;
+                    RemainingToRefund -= SuppliesToRefund;
+                }
+            }
         }
     }
 
