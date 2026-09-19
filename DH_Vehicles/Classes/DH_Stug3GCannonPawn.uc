@@ -18,6 +18,7 @@ defaultproperties
     BinocPositionIndex=4
     DrivePos=(X=0.0,Y=0.0,Z=-7.0)
     DriveAnim="stand_idlehip_binoc"
+    bHasAltFire=false
     CameraBone="Turret"
     GunsightOverlay=Texture'DH_VehicleOptics_tex.stug3_SflZF1a_sight'
     GunsightSize=0.471 // 8 degrees visible FOV at 5x magnification (Sfl.ZF1a sight)
