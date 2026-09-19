@@ -8,11 +8,17 @@ class DHVoiceChatRoom extends UnrealChatRoom;
 var     int     SquadIndex;
 var     float   LocalBroadcastRangeSquared;
 
+// Native GetMask() is 32-bit. VoiceIDs go to 254; shifting those wraps and corrupts bits 0-31.
+function bool CanUseNativeVoiceMask(byte VoiceID)
+{
+    return VoiceID < 32;
+}
+
 // Called after LeaveChannel, or when player exits the server
 // NOTE: overridden to eliminate "has left channel" chat messages, & also to allow more than 32 VoiceIDs
 function RemoveMember(PlayerReplicationInfo PRI)
 {
-    if (PRI != none && PRI.VoiceID != 255 && IsMember(PRI, true))
+    if (PRI != none && PRI.VoiceID != 255 && CanUseNativeVoiceMask(PRI.VoiceID) && IsMember(PRI, true))
     {
         SetMask(GetMask() & ~(1 << PRI.VoiceID));
     }
@@ -43,9 +49,12 @@ function AddMember(PlayerReplicationInfo PRI)
         }
     }
 
-    SetMask(GetMask() | (1 << PRI.VoiceID));
-
-    super(VoiceChatRoom).AddMember(PRI);
+    // VoiceChatRoom.AddMember uses 1<<VoiceID on a 32-bit mask; skip it for IDs >= 32.
+    if (CanUseNativeVoiceMask(PRI.VoiceID))
+    {
+        SetMask(GetMask() | (1 << PRI.VoiceID));
+        super(VoiceChatRoom).AddMember(PRI);
+    }
 }
 
 simulated function bool IsSquadChannel()
