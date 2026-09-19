@@ -40,6 +40,10 @@ Begin:
     {
         Destroy();
     }
+    else
+    {
+        EventIndex = 0;
+    }
 
     GotoState('');
 }
