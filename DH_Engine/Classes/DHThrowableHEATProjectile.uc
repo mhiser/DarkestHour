@@ -321,7 +321,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
             TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (Direction * TempMaxWall), false);
 
             // Due to static meshes resulting in a hit even with the trace starting right inside of them (terrain and BSP 'space' would return none)
-            if (TraceHitActor != none && !SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * Direction)))
+            if (TraceHitActor != none && !SetLocation(TempHitLocation + (0.5 * Direction)))
             {
                 TraceHitActor = none;
             }
@@ -333,7 +333,7 @@ simulated function HitWall(Vector HitNormal, Actor Wall)
         TraceHitActor = Trace(TempHitLocation, TempHitNormal, Location, Location + (Direction * MaxWall), false);
     }
 
-    if (TraceHitActor != none && SetLocation(TempHitLocation + (vect(0.5, 0.0, 0.0) * Direction)))
+    if (TraceHitActor != none && SetLocation(TempHitLocation + (0.5 * Direction)))
     {
         WorldPenetrationExplode(TempHitLocation + (PeneExploWallOut * TempHitNormal), TempHitNormal);
 
