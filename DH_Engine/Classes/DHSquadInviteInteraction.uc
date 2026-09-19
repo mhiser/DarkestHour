@@ -45,7 +45,7 @@ function OnOptionSelected(int Index)
 defaultproperties
 {
     PromptText="{0} has invited you to join {1} squad."
-    Options(0)=(Key=IK_F1,Text="Accept")
-    Options(1)=(Key=IK_F2,Text="Decline")
-    Options(2)=(Key=IK_F3,Text="Ignore All")
+    Options(0)=(Key=IK_F1,Text="Accept",Command="AcceptSquadInvite")
+    Options(1)=(Key=IK_F2,Text="Decline",Command="DeclineSquadInvite")
+    Options(2)=(Key=IK_F3,Text="Ignore All",Command="IgnoreSquadInvites")
 }

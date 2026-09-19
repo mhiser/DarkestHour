@@ -39,6 +39,6 @@ function OnOptionSelected(int Index)
 defaultproperties
 {
     PromptText="{0} has team-killed you!"
-    Options(0)=(Key=IK_F1,Text="Forgive")
-    Options(1)=(Key=IK_F2,Text="Punish")
+    Options(0)=(Key=IK_F1,Text="Forgive",Command="ForgiveTeamKill")
+    Options(1)=(Key=IK_F2,Text="Punish",Command="PunishTeamKill")
 }

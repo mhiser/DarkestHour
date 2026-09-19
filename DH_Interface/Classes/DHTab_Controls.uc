@@ -294,6 +294,16 @@ defaultproperties
     Captions_Game(7)="Auto-Join Squad"
     Bindings_Game(8)="PlaceRallyPoint"
     Captions_Game(8)="Place Rally Point"
+    Bindings_Game(9)="ForgiveTeamKill"
+    Captions_Game(9)="Forgive Team Kill"
+    Bindings_Game(10)="PunishTeamKill"
+    Captions_Game(10)="Punish Team Kill"
+    Bindings_Game(11)="AcceptSquadInvite"
+    Captions_Game(11)="Accept Squad Invite"
+    Bindings_Game(12)="DeclineSquadInvite"
+    Captions_Game(12)="Decline Squad Invite"
+    Bindings_Game(13)="IgnoreSquadInvites"
+    Captions_Game(13)="Ignore Squad Invites"
 
     // Additional movement keybinds
     Bindings_Movement(12)="ToggleRun"

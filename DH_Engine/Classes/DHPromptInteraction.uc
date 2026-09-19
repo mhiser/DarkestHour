@@ -16,6 +16,7 @@ struct Option
 {
     var EInputKey Key;
     var localized string Text;
+    var string Command; // bindable exec; empty keeps Key as-is (e.g. votes)
 };
 var array<Option> Options;
 var string OptionsText;
@@ -30,16 +31,76 @@ function Initialize()
 {
     local int i;
     local array<string> OptionStrings;
+    local EInputKey BoundKey;
 
     super.Initialize();
 
     for (i = 0; i < Options.Length; ++i)
     {
+        if (Options[i].Command != "")
+        {
+            BoundKey = GetBoundKeyForCommand(Options[i].Command);
+
+            // Unbound commands keep their hardcoded F-key defaults.
+            if (BoundKey != IK_None)
+            {
+                Options[i].Key = BoundKey;
+            }
+        }
+
         OptionStrings[OptionStrings.Length] = Class'GameInfo'.static.MakeColorCode(KeyTextColor) $
         "[" $ GetFriendlyName(Options[i].Key) $ "]" $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White) @ Options[i].Text;
     }
 
     OptionsText = Class'UString'.static.Join(" ", OptionStrings);
+}
+
+function EInputKey GetBoundKeyForCommand(string Command)
+{
+    local array<string> KeyNames;
+    local int KeyNumber;
+
+    if (Command == "" || ViewportOwner == none || ViewportOwner.Actor == none)
+    {
+        return IK_None;
+    }
+
+    Split(ViewportOwner.Actor.ConsoleCommand("BINDINGTOKEY \"" $ Command $ "\""), ",", KeyNames);
+
+    if (KeyNames.Length == 0 || KeyNames[0] == "")
+    {
+        return IK_None;
+    }
+
+    KeyNumber = int(ViewportOwner.Actor.ConsoleCommand("KEYNUMBER" @ KeyNames[0]));
+
+    if (KeyNumber <= 0)
+    {
+        return IK_None;
+    }
+
+    return EInputKey(KeyNumber);
+}
+
+function bool SelectOptionByCommand(string Command)
+{
+    local int i;
+
+    if (Command == "")
+    {
+        return false;
+    }
+
+    for (i = 0; i < Options.Length; ++i)
+    {
+        if (Options[i].Command ~= Command)
+        {
+            OnOptionSelected(i);
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // The interaction system is doesn't actually properly flag state, so we have to
