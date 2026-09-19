@@ -527,7 +527,7 @@ function ToggleSpawnPointIsActiveByTag(name SpawnPointTag)
 
     for (i = 0; i < SpawnPointIndices.Length; ++i)
     {
-        SP = DHSpawnPoint(GRI.GetSpawnPoint(i));
+        SP = DHSpawnPoint(GRI.GetSpawnPoint(SpawnPointIndices[i]));
 
         if (SP != none)
         {
