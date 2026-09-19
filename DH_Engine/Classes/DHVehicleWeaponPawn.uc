@@ -1181,6 +1181,13 @@ simulated state ViewTransition
             {
                 HandleBinoculars(true);
             }
+            // Leaving binocs: snap dest pose now. EndState is one frame too late
+            // (Sleep(0) or dest frame 0 draws stand_idlehip_binoc on channel 0).
+            // Gun TransitionDownAnim still plays above.
+            else if (LastPositionIndex == BinocPositionIndex)
+            {
+                HandleBinoculars(false);
+            }
         }
     }
 
@@ -1206,12 +1213,6 @@ simulated state ViewTransition
             }
 
             FPCamPos = DriverPositions[DriverPositionIndex].ViewLocation;
-        }
-
-        // If moving off binoculars, destroy binocs attachment & any other setup stuff
-        if (LastPositionIndex == BinocPositionIndex)
-        {
-            HandleBinoculars(false);
         }
 
         // If moving to an unexposed position, disable the player's hit detection
