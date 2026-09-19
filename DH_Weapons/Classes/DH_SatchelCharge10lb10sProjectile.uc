@@ -121,7 +121,7 @@ function HandleVehicles(Vector HitLocation)
                 }
                 else // Otherwise do minor damage to the engine
                 {
-                    Veh.DamageEngine(EngineDamageMax * (Distance / EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+                    Veh.DamageEngine(GetOccludedFalloffDamage(EngineDamageMax, Distance, EngineDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
                 }
             }
 
@@ -145,7 +145,7 @@ function HandleVehicles(Vector HitLocation)
             }
             else // Otherwise do minor damge to the tracks
             {
-                Veh.DamageTrack(TreadDamageMax * (Distance / TreadDamageRadius), bool(TrackNum));
+                Veh.DamageTrack(GetOccludedFalloffDamage(TreadDamageMax, Distance, TreadDamageRadius), bool(TrackNum));
             }
         }
     }
@@ -163,7 +163,7 @@ function HandleObstacles(Vector HitLocation)
         if (O != none && !FastTrace(O.Location, Location))
         {
             Distance = VSize(Location - O.Location);
-            O.TakeDamage(ObstacleDamageMax * (Distance / ObstacleDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+            O.TakeDamage(GetOccludedFalloffDamage(ObstacleDamageMax, Distance, ObstacleDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
         }
     }
 }
@@ -180,9 +180,20 @@ function HandleConstructions(Vector HitLocation)
         if (C != none && !FastTrace(C.Location, Location))
         {
             Distance = VSize(Location - C.Location);
-            C.TakeDamage(ConstructionDamageMax * (Distance / ConstructionDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
+            C.TakeDamage(GetOccludedFalloffDamage(ConstructionDamageMax, Distance, ConstructionDamageRadius), SavedInstigator, vect(0,0,0), vect(0,0,0), MyDamageType);
         }
     }
+}
+
+// Occluded satchel damage falls off with distance (full at 0, none at Radius).
+function float GetOccludedFalloffDamage(float DamageMax, float Distance, float Radius)
+{
+    if (Radius <= 0.0)
+    {
+        return 0.0;
+    }
+
+    return DamageMax * FClamp(1.0 - (Distance / Radius), 0.0, 1.0);
 }
 
 defaultproperties
