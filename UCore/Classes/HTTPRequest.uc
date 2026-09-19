@@ -116,7 +116,7 @@ function Timer()
             // TODO: Fix ParseHeaders to return a TreeMap_string_array_string
             // so we can retrieve multiple instances of Set-Cookie. (this is
             // essentially an "unordered multimap")
-            if (ResponseHeaders.Get("Set-Cookie", SetCookie))
+            if (Session != none && ResponseHeaders.Get("Set-Cookie", SetCookie))
             {
                 Session.SetCookie(SetCookie);
             }
@@ -137,16 +137,32 @@ function Timer()
                             R.Method = self.Method;
                             R.Host = U.Host;
                             R.Path = U.Path;
-                            R.Protocol = U.Scheme;
+
+                            if (U.Query != "")
+                            {
+                                R.Path = U.Path $ "?" $ U.Query;
+                            }
+
+                            // Keep HTTP/1.1 in the request line; U.Scheme is "http"/"https".
+                            R.Protocol = self.Protocol;
                             R.bAllowRedirects = self.bAllowRedirects;
                             R.Headers = self.Headers;
+                            R.Session = self.Session;
+                            R.UserObject = self.UserObject;
+                            R.UserString = self.UserString;
+                            R.OnResponse = self.OnResponse;
+                            R.OnRedirect = self.OnRedirect;
                             R.Send();
+                            Destroy();
+                            return;
                         }
                         else
                         {
                             Warn("Could not parse URL for redirection (" $ Loc $ ")");
                         }
                     }
+
+                    OnResponse(self, Status, ResponseHeaders, "");
                     Destroy();
                     return;
                 default:
@@ -203,7 +219,7 @@ function Timer()
 
         Command $= MyLink.CRLF;
 
-        if (Session != none)
+        if (Session != none && Session.Cookies != none)
         {
             HeaderKeys = Session.Cookies.GetKeys();
 
@@ -223,6 +239,8 @@ function Timer()
     else if (MyLink.ReceiveState == MyLink.Timeout)
     {
         OnResponse(self, 408, none, "");
+        Destroy();
+        return;
     }
 
     --Timeout;
@@ -230,6 +248,7 @@ function Timer()
     if (Timeout < 0)
     {
         Log("HTTP Request timed out");
+        OnResponse(self, 408, none, "");
         Destroy();
         return;
     }

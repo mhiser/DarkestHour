@@ -29,6 +29,11 @@ function HTTPCookie SetCookie(string S)
 
     Value = Class'UString'.static.Trim(Value);
 
+    if (Cookies == none)
+    {
+        Cookies = new Class'TreeMap_string_Object';
+    }
+
     // Check for existing cookie.
     if (Cookies.Get(CookieName, O))
     {
@@ -38,6 +43,7 @@ function HTTPCookie SetCookie(string S)
     {
         Cookie = new Class'HTTPCookie';
         Cookie.CookieName = CookieName;
+        Cookies.Put(CookieName, Cookie);
     }
 
     Cookie.Value = Value;
@@ -77,5 +83,7 @@ function HTTPCookie SetCookie(string S)
             Cookie.Extensions[Cookie.Extensions.Length] = Value;
         }
     }
+
+    return Cookie;
 }
 
