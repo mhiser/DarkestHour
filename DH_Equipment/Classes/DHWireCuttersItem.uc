@@ -84,6 +84,9 @@ simulated state Cutting
         {
             P.SetIsCuttingWire(false);
         }
+
+        ObstacleBeingCut = none;
+        ConstructionBeingCut = none;
     }
 
     simulated function Tick(float DeltaTime)
@@ -92,7 +95,7 @@ simulated state Cutting
 
         // A fail safe to get out of this state if either something went wrong or somehow we shouldn't continue
         if ((ConstructionBeingCut == none && ObstacleBeingCut == none) ||
-            (ObstacleBeingCut != none && ObstacleBeingCut.Info.IsCleared()) ||
+            (ObstacleBeingCut != none && ObstacleBeingCut.IsInState('Cleared')) ||
             (ConstructionBeingCut != none && !ConstructionBeingCut.CanBeCut()))
         {
             GotoState('');
@@ -116,6 +119,11 @@ simulated state Cutting
         else if (ConstructionBeingCut != none && P != none)
         {
             P.ServerCutConstruction(ConstructionBeingCut);
+        }
+        else
+        {
+            ObstacleBeingCut = none;
+            ConstructionBeingCut = none;
         }
 
         GotoState('');
@@ -190,11 +198,12 @@ simulated function Fire(float F)
     // Support for obstacles
     foreach TraceActors(Class'DHObstacleInstance', O, HitLocation, HitNormal, TraceEnd, TraceStart, vect(1.0, 1.0, 1.0))
     {
-        if (O != none && !O.Info.IsCleared() && O.Info.CanBeCut())
+        if (O != none && !O.IsInState('Cleared') && O.Info.CanBeCut())
         {
             ObstacleBeingCut = O;
+            ConstructionBeingCut = none;
             GotoState('Cutting');
-            break;
+            return; // GotoState does not exit this function
         }
     }
 
@@ -204,8 +213,9 @@ simulated function Fire(float F)
         if (C != none && C.CanBeCut())
         {
             ConstructionBeingCut = C;
+            ObstacleBeingCut = none;
             GotoState('Cutting');
-            break;
+            return; // GotoState does not exit this function
         }
     }
 }
