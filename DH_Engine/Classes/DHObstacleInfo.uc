@@ -30,9 +30,19 @@ var     array<Type>                 DefaultTypes;
 
 var     array<DHObstacleInstance>   Obstacles;
 
+simulated function bool IsValidTypeIndex(int Index, bool bIsDefault)
+{
+    if (bIsDefault)
+    {
+        return Index >= 0 && Index < DefaultTypes.Length;
+    }
+
+    return Index >= 0 && Index < Types.Length;
+}
+
 simulated function StaticMesh GetIntactStaticMesh(int Index, bool bIsDefault)
 {
-    if (Index < 0 || Index >= Types.Length)
+    if (!IsValidTypeIndex(Index, bIsDefault))
     {
         return none;
     }
@@ -49,6 +59,11 @@ simulated function StaticMesh GetIntactStaticMesh(int Index, bool bIsDefault)
 
 simulated function StaticMesh GetClearedStaticMesh(int Index, int InstanceIndex, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return none;
+    }
+
     if (bIsDefault)
     {
         if (DefaultTypes[Index].ClearedStaticMeshes.Length > 0)
@@ -69,6 +84,11 @@ simulated function StaticMesh GetClearedStaticMesh(int Index, int InstanceIndex,
 
 simulated function bool CanBeCut(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return false;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].bCanBeCut;
@@ -81,6 +101,11 @@ simulated function bool CanBeCut(int Index, bool bIsDefault)
 
 simulated function bool CanBeMantled(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return false;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].bCanBeMantled;
@@ -93,6 +118,11 @@ simulated function bool CanBeMantled(int Index, bool bIsDefault)
 
 simulated function bool CanBeCrushed(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return false;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].bCanBeCrushed;
@@ -105,6 +135,11 @@ simulated function bool CanBeCrushed(int Index, bool bIsDefault)
 
 simulated function bool CanBeDestroyedByExplosives(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return false;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].bCanBeDestroyedByExplosives;
@@ -117,6 +152,11 @@ simulated function bool CanBeDestroyedByExplosives(int Index, bool bIsDefault)
 
 simulated function bool CanBeDestroyedByWeapons(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return false;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].bCanBeDestroyedByWeapons;
@@ -129,6 +169,11 @@ simulated function bool CanBeDestroyedByWeapons(int Index, bool bIsDefault)
 
 simulated function int GetExplosionDamageThreshold(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return 0;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].ExplosionDamageThreshold;
@@ -141,6 +186,11 @@ simulated function int GetExplosionDamageThreshold(int Index, bool bIsDefault)
 
 simulated function int GetDamageThreshold(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return 0;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].DamageThreshold;
@@ -153,6 +203,12 @@ simulated function int GetDamageThreshold(int Index, bool bIsDefault)
 
 simulated function Sound GetClearSound(int Index, bool bIsDefault, out float ClearSoundRadius)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        ClearSoundRadius = 0.0;
+        return none;
+    }
+
     if (bIsDefault)
     {
         if (DefaultTypes[Index].ClearSoundRadius == 0.0)
@@ -185,6 +241,11 @@ simulated function Sound GetClearSound(int Index, bool bIsDefault, out float Cle
 
 simulated function float GetCutDuration(int Index, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return 0.0;
+    }
+
     if (bIsDefault)
     {
         return DefaultTypes[Index].CutDuration;
@@ -197,6 +258,11 @@ simulated function float GetCutDuration(int Index, bool bIsDefault)
 
 simulated function class<Emitter> GetClearEmitterClass(int Index, int InstanceIndex, bool bIsDefault)
 {
+    if (!IsValidTypeIndex(Index, bIsDefault))
+    {
+        return none;
+    }
+
     if (bIsDefault)
     {
         if (DefaultTypes[Index].ClearEmitterClasses.Length > 0)
