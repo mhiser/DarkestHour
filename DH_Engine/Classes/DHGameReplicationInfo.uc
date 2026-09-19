@@ -863,31 +863,6 @@ function int GetNumberOfGeneratingSupplyPointsForTeam(int Team)
     return Count;
 }
 
-// This will return supply caches (only they can generate supply)
-simulated function int GetNumberOfSupplyCachesForTeam(int Team, optional bool bExcludeMainCache)
-{
-    local int i, Count;
-
-    // Count active supply points based on team
-    for (i = 0; i < arraycount(SupplyPoints); ++i)
-    {
-        if (SupplyPoints[i].Actor != none &&
-            SupplyPoints[i].bIsActive == 1 &&
-            SupplyPoints[i].TeamIndex == Team &&
-            SupplyPoints[i].ActorClass.default.bCanGenerateSupplies)
-        {
-            ++Count;
-
-            if (bExcludeMainCache && SupplyPoints[i].ActorClass.default.bIsMainSupplyCache)
-            {
-                --Count;
-            }
-        }
-    }
-
-    return Count;
-}
-
 //==============================================================================
 // Spawn Points
 //==============================================================================
@@ -969,28 +944,6 @@ simulated function DHSpawnPointBase GetMostDesirableSpawnPoint(DHPlayer PC, opti
     }
 
     return SP;
-}
-
-simulated function bool IsRallyPointIndexValid(DHPlayer PC, byte RallyPointIndex, int TeamIndex)
-{
-    local DHSquadRallyPoint RP;
-    local DHPlayerReplicationInfo PRI;
-
-    if (PC == none || PC.SquadReplicationInfo == none)
-    {
-        return false;
-    }
-
-    PRI = DHPlayerReplicationInfo(PC.PlayerReplicationInfo);
-
-    RP = PC.SquadReplicationInfo.RallyPoints[RallyPointIndex];
-
-    if (RP == none || PRI == none || PRI.Team.TeamIndex != RP.GetTeamIndex() || PRI.SquadIndex != RP.SquadIndex)
-    {
-        return false;
-    }
-
-    return true;
 }
 
 simulated function bool CanSpawnWithParameters(int SpawnPointIndex, int TeamIndex, int RoleIndex, int SquadIndex, int VehiclePoolIndex, optional bool bSkipTimeCheck)
@@ -1276,11 +1229,6 @@ simulated function GetRoleCounts(RORoleInfo RI, out int Count, out int BotCount,
 // Artillery Functions
 //------------------------------------------------------------------------------
 
-simulated function bool IsArtilleryEnabled(int TeamIndex)
-{
-    return bOffMapArtilleryEnabled[TeamIndex] == 1 || bOffMapArtilleryEnabled[TeamIndex] == 1;
-}
-
 function AddArtillery(DHArtillery Artillery)
 {
     local int i;
@@ -1305,19 +1253,6 @@ function AddRadio(DHRadio Radio)
         {
             Radios[i] = Radio;
             break;
-        }
-    }
-}
-
-function RemoveRadio(DHRadio Radio)
-{
-    local int i;
-
-    for (i = 0; i < arraycount(Radios); ++i)
-    {
-        if (Radios[i] == Radio)
-        {
-            Radios[i] = none;
         }
     }
 }
@@ -2185,19 +2120,9 @@ simulated function byte GetDangerZoneBalance()
     return DangerZoneBalance;
 }
 
-simulated function float GetDangerZoneIntensity(float PointerX, float PointerY, byte TeamIndex)
-{
-    return Class'DHDangerZone'.static.GetIntensity(self, PointerX, PointerY, TeamIndex);
-}
-
 simulated function bool IsInDangerZone(float PointerX, float PointerY, byte TeamIndex)
 {
     return Class'DHDangerZone'.static.IsIn(self, PointerX, PointerY, TeamIndex);
-}
-
-simulated function bool IsInFriendlyZone(float PointerX, float PointerY, byte TeamIndex)
-{
-    return IsInDangerZone(PointerX, PointerY, int(!bool(TeamIndex)));
 }
 
 simulated function DangerZoneUpdated()

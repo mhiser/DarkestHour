@@ -1720,40 +1720,6 @@ function TossAmmo(Pawn Gunner)
     PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
 }
 
-function TossMortarAmmo(DHPawn P)
-{
-    local DarkestHourGame G;
-    local DHGameReplicationInfo GRI;
-
-    if (bUsedCarriedMGAmmo || P == none || !P.ResupplyMortarAmmunition())
-    {
-        return;
-    }
-
-    bUsedCarriedMGAmmo = true;
-
-    G = DarkestHourGame(Level.Game);
-    GRI = DHGameReplicationInfo(Level.Game.GameReplicationInfo);
-
-    if (Controller != none && P.Controller != none)
-    {
-        // notification message to gunner
-        P.ReceiveLocalizedMessage(Class'DHResupplyMessage', 1, Controller.PlayerReplicationInfo);
-
-        // notification message to supplier
-        ReceiveLocalizedMessage(Class'DHResupplyMessage', 0, P.Controller.PlayerReplicationInfo);
-
-        if (GRI != none) // remove any resupply request
-        {
-            GRI.RemoveMGResupplyRequestFor(P.Controller.PlayerReplicationInfo);
-        }
-
-        G.ScoreMortarResupply(Controller, P.Controller);
-    }
-
-    PlayOwnedSound(Sound'Inf_Weapons_Foley.ammogive', SLOT_Interact, 1.75,, 10.0);
-}
-
 function TossMortarVehicleAmmo(DHMortarVehicle V)
 {
     local DarkestHourGame  G;

@@ -22,12 +22,6 @@ static function string TrimPort(string NetworkAddress)
     return NetworkAddress;
 }
 
-function INet4Address StripPort()
-{
-    Port = 0;
-    return self;
-}
-
 function string ToString()
 {
     local string S;

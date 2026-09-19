@@ -60,18 +60,6 @@ function int UnixTimestamp()
     return (Days * 86400) + (Hour * 3600) + (Minute * 60) + Second;
 }
 
-static function int WeekdayFromDays(int D)
-{
-    if (D >= -4)
-    {
-        return (D + 4) % 7;
-    }
-    else
-    {
-        return (D + 5) % 7 + 6;
-    }
-}
-
 static function int DaysFromCivil(int Year, int Month, int Day)
 {
     local int Era, YearOfEra, DayOfYear, DayOfEra;

@@ -280,27 +280,6 @@ static function int GetDefaultSkinIndexForVariant(DHActorProxy.Context Context, 
     return 0;
 }
 
-// Gets the number of variants for the construction.
-// Note that this function assumes that the entries are stored in ascending order of variants.
-// If this is not the case, the function will return an incorrect value.
-static function int GetVariantCount()
-{
-    local int i, Count, LastVariantIndex;
-
-    LastVariantIndex = -1;
-
-    for (i = 0; i < default.VehicleClasses.Length; ++i)
-    {
-        if (default.VehicleClasses[i].VariantIndex != LastVariantIndex)
-        {
-            LastVariantIndex = default.VehicleClasses[i].VariantIndex;
-            ++Count;
-        }
-    }
-
-    return Count;
-}
-
 static function array<int> GetAvailableVariantIndices(DHActorProxy.Context Context)
 {
     local int i;

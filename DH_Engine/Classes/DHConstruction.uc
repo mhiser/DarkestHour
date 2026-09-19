@@ -283,11 +283,6 @@ static function class<DHConstruction> GetConstructionClass(DHActorProxy.Context 
     return default.Class;
 }
 
-static function bool IsProxyClass(DHActorProxy.Context Context)
-{
-    return GetConstructionClass(Context) != default.Class;
-}
-
 simulated function OnPlaced();
 simulated function OnConstructed();
 function OnStageIndexChanged(int OldIndex);
@@ -297,7 +292,6 @@ function OnHealthChanged();
 
 simulated function bool IsBroken() { return false; }
 simulated function bool IsConstructed() { return false; }
-simulated function bool IsTattered() { return false; }
 simulated function bool CanBeBuilt() { return false; }
 simulated function bool CanBeCut() { return false; }
 simulated function bool IsDummy() { return false; }
