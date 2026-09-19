@@ -667,9 +667,10 @@ function int GetMinRequiredDepth()
 
 function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, out array<int> ObjectiveIndices)
 {
-    local int i;
+    local int i, RequiredObjNum;
     local DHObjectiveTreeNode Node;
     local DHObjectiveTreeNode Child;
+    local DHObjective RequiredObj;
 
     if (Objective == none)
     {
@@ -690,12 +691,22 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     {
         for (i = 0; i < Objective.AxisRequiredObjForCapture.Length; ++i)
         {
-            if (DHObjectives[Objective.AxisRequiredObjForCapture[i]].IsActive())
+            RequiredObjNum = Objective.AxisRequiredObjForCapture[i];
+
+            // Skipped ObjNums leave empty DHObjectives slots; keep walking later children.
+            if (RequiredObjNum < 0 || RequiredObjNum >= arraycount(DHObjectives))
             {
                 continue;
             }
 
-            Child = GetObjectiveTree(Team, DHObjectives[Objective.AxisRequiredObjForCapture[i]], ObjectiveIndices);
+            RequiredObj = DHObjectives[RequiredObjNum];
+
+            if (RequiredObj == none || RequiredObj.IsActive())
+            {
+                continue;
+            }
+
+            Child = GetObjectiveTree(Team, RequiredObj, ObjectiveIndices);
 
             if (Child != none)
             {
@@ -707,12 +718,22 @@ function DHObjectiveTreeNode GetObjectiveTree(int Team, DHObjective Objective, o
     {
         for (i = 0; i < Objective.AlliesRequiredObjForCapture.Length; ++i)
         {
-            if (DHObjectives[Objective.AlliesRequiredObjForCapture[i]].IsActive())
+            RequiredObjNum = Objective.AlliesRequiredObjForCapture[i];
+
+            // Skipped ObjNums leave empty DHObjectives slots; keep walking later children.
+            if (RequiredObjNum < 0 || RequiredObjNum >= arraycount(DHObjectives))
             {
                 continue;
             }
 
-            Child = GetObjectiveTree(Team, DHObjectives[Objective.AlliesRequiredObjForCapture[i]], ObjectiveIndices);
+            RequiredObj = DHObjectives[RequiredObjNum];
+
+            if (RequiredObj == none || RequiredObj.IsActive())
+            {
+                continue;
+            }
+
+            Child = GetObjectiveTree(Team, RequiredObj, ObjectiveIndices);
 
             if (Child != none)
             {

@@ -4097,7 +4097,8 @@ function UpdateObjectiveSpawns()
                 continue;
             }
 
-            if (Class'UArray'.static.IIndexOf(ObjIndices, i) == -1)
+            // ObjIndices stores ObjNums, which may not match a packed loop index.
+            if (Class'UArray'.static.IIndexOf(ObjIndices, Obj.ObjNum) == -1)
             {
                 // If the objective has a spawn point reference and is neutral
                 // or controlled by current team, destroy the spawn point.
