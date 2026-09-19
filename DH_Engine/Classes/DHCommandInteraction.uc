@@ -498,7 +498,7 @@ function bool KeyEvent(out EInputKey Key, out EInputAction Action, float Delta)
 
     PC = DHPlayer(ViewportOwner.Actor);
 
-    if (PC == none || PC.Pawn == none && PC.Pawn.Region.Zone != none)
+    if (PC == none || PC.Pawn == none)
     {
         return false;
     }

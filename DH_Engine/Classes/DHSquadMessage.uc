@@ -174,7 +174,7 @@ static function string GetString(optional int S, optional PlayerReplicationInfo 
             return Class'ROTeamGame'.static.ParseLoadingHintNoColor(default.NotInSquadMessage, PlayerController(OptionalObject));
         case 74:
             SRI = DHSquadReplicationInfo(OptionalObject);
-            if (SRI != none || RelatedPRI_1 != none || RelatedPRI_1.Team != none)
+            if (SRI != none && RelatedPRI_1 != none && RelatedPRI_1.Team != none)
             {
                 SquadName = SRI.GetSquadName(RelatedPRI_1.Team.TeamIndex, ExtraValue);
                 return Repl(Repl(default.SquadMergedSourceMessage, "{0}", SquadName), "{1}", RelatedPRI_1.PlayerName);

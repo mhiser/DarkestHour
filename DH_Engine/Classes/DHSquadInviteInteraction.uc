@@ -10,12 +10,14 @@ var string SquadName;
 var int TeamIndex;
 var int SquadIndex;
 
-function Initialized()
+function string GetPromptText()
 {
-    super.Initialized();
+    local string Text;
 
-    PromptText = Repl(PromptText, "{0}", Class'GameInfo'.static.MakeColorCode(Class'DHColor'.default.SquadColor) $ default.SenderName $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White));
-    PromptText = Repl(PromptText, "{1}", Class'GameInfo'.static.MakeColorCode(Class'DHColor'.default.SquadColor) $ default.SquadName $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White));
+    Text = Repl(default.PromptText, "{0}", Class'GameInfo'.static.MakeColorCode(Class'DHColor'.default.SquadColor) $ SenderName $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White));
+    Text = Repl(Text, "{1}", Class'GameInfo'.static.MakeColorCode(Class'DHColor'.default.SquadColor) $ SquadName $ Class'GameInfo'.static.MakeColorCode(Class'UColor'.default.White));
+
+    return Text;
 }
 
 function OnOptionSelected(int Index)
@@ -29,7 +31,7 @@ function OnOptionSelected(int Index)
         switch (Index)
         {
             case 0: // Accept
-                PC.ServerSquadJoin(default.TeamIndex, default.SquadIndex, true);
+                PC.ServerSquadJoin(TeamIndex, SquadIndex, true);
                 break;
             case 1: // Decline
                 break;
