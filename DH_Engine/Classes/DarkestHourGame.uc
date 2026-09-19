@@ -2257,7 +2257,7 @@ function KillEvent(string Killtype, PlayerReplicationInfo Killer, PlayerReplicat
 
 function UpdateArtilleryAvailability()
 {
-    local int                           i;
+    local int                           i, TeamIndex;
     local class<DHVehicle>              VehicleClass;
     local class<DHConstruction_Vehicle> Construction;
     local DHActorProxy.Context          Context;
@@ -2330,17 +2330,25 @@ function UpdateArtilleryAvailability()
         }
     }
 
-    // Check if off-map artillery (legacy artillery) is enabled
+    // Check if off-map artillery (legacy artillery) is enabled.
+    // Availability is based on ArtilleryClass, not Limit; remaining strikes are handled separately.
     for (i = 0; i < DHLevelInfo.ArtilleryTypes.Length; ++i)
     {
-        if (DHLevelInfo.ArtilleryTypes[i].TeamIndex == NEUTRAL_TEAM_INDEX)
+        if (DHLevelInfo.ArtilleryTypes[i].ArtilleryClass == none)
+        {
+            continue;
+        }
+
+        TeamIndex = DHLevelInfo.ArtilleryTypes[i].TeamIndex;
+
+        if (TeamIndex == NEUTRAL_TEAM_INDEX)
         {
             GRI.bOffMapArtilleryEnabled[AXIS_TEAM_INDEX] = 1;
             GRI.bOffMapArtilleryEnabled[ALLIES_TEAM_INDEX] = 1;
         }
-        else if (DHLevelInfo.ArtilleryTypes[DHLevelInfo.ArtilleryTypes[i].TeamIndex].Limit > 0)
+        else if (TeamIndex == AXIS_TEAM_INDEX || TeamIndex == ALLIES_TEAM_INDEX)
         {
-            GRI.bOffMapArtilleryEnabled[DHLevelInfo.ArtilleryTypes[i].TeamIndex] = 1;
+            GRI.bOffMapArtilleryEnabled[TeamIndex] = 1;
         }
     }
 }
