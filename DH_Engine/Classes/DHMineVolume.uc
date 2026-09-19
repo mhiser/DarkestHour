@@ -288,13 +288,9 @@ function bool RelevantPawnInMineVolume(Pawn P)
         WarnPlayer(P);
     }
 
-    // Workaround fix to a problem where player teleports into a spawn vehicle, which means they don't get a Touch & so don't get a valid enter time recorded
-    // If pawn's enter time is before this MV's ActivationTime then it cannot be valid, meaning pawn must have just teleported inside MV, so we record current time
-    // Note we now zero the enter time whenever a pawn exits a MV, so // Useful so we can detect a pawn that has teleported inside MV, as its enter time will be zero & so before the ActivationTime
-    if (P.MineAreaEnterTime < ActivationTime)
+    // Workaround if pawn has no valid enter time (teleport, no Touch, leftover from another MV) - start KillTime grace now
+    if (CorrectInvalidMineAreaEnterTime(P))
     {
-        P.MineAreaEnterTime = Level.TimeSeconds;
-
         return true;
     }
 
@@ -317,7 +313,13 @@ function bool RelevantVehicleInMineVolume(ROVehicle Vehicle)
     local Pawn Occupant;
     local int  i;
 
-    bVehicleBeingDestroyed = PawnInMineVolumeTooLong(Vehicle); // if vehicle is going to get blown up then for now just set a flag so we can handle warnings
+    // Same invalid-enter-time workaround as infantry. A vehicle that overlaps without a Touch
+    // (common against setup-phase DSM walls) keeps MineAreaEnterTime at 0, so after KillTime
+    // seconds of the round, PawnInMineVolumeTooLong is instantly true and the vehicle is wiped.
+    if (!CorrectInvalidMineAreaEnterTime(Vehicle))
+    {
+        bVehicleBeingDestroyed = PawnInMineVolumeTooLong(Vehicle); // if vehicle is going to get blown up then for now just set a flag so we can handle warnings
+    }
 
     // Loop through all vehicle positions & handle any occupants
     Occupant = Vehicle.Driver;
@@ -415,6 +417,21 @@ function bool IsARelevantPawn(Pawn P)
     }
 
     return (PawnTeam == AXIS_TEAM_INDEX && MineKillStyle == KS_Axis) || (PawnTeam == ALLIES_TEAM_INDEX && MineKillStyle == KS_Allies);
+}
+
+// If pawn's recorded enter time cannot belong to this mine volume, treat it as just having entered.
+// Happens when Touch never fired (teleport, overlap with a blocking DSM) or enter time is leftover from another MV.
+// Returns true if the enter time was invalid and has been corrected (caller should not kill this tick).
+function bool CorrectInvalidMineAreaEnterTime(Pawn P)
+{
+    if (P.MineAreaEnterTime < ActivationTime)
+    {
+        P.MineAreaEnterTime = Level.TimeSeconds;
+
+        return true;
+    }
+
+    return false;
 }
 
 // New function to check if pawn has been inside the mine volume too long & is going to get blown up (added for readability in other functions)
