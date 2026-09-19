@@ -8,6 +8,7 @@ class DH_MKB42HMeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=Class'DH_MKB42HBashDamType'
+    BayonetDamageType=Class'DH_MKB42HBayonetDamType'
 
     BayonetTraceRange=130.0   // -10
 

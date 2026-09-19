@@ -10,7 +10,7 @@ defaultproperties
     ProjectileClass=Class'DH_BazookaM9Rocket'
     AmmoClass=Class'DH_BazookaM9Ammo'
     Spread=375.0    // slightly higher than the M1A1 due to the poorer flight characteristics of the M6A3 round
-    ExhaustDamageType=Class'DH_BazookaExhaustDamType'
+    ExhaustDamageType=Class'DH_BazookaM9ExhaustDamType'
     ExhaustDamage=180.0
     ExhaustLength=320.0
     MuzzleBone="muzzle" //"warhead1"

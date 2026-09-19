@@ -8,6 +8,7 @@ class DH_StenMkVMeleeFire extends DHMeleeFire;
 defaultproperties
 {
     DamageType=Class'DH_StenMkVBashDamType'
+    BayonetDamageType=Class'DH_StenMkVBayonetDamType'
     GroundBashSound=SoundGroup'Inf_Weapons_Foley.pistol_hit_ground'
 
     BayonetTraceRange=120.0   // -20

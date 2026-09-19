@@ -13,10 +13,10 @@ defaultproperties
     ROShellCaseClass=Class'RO3rdShellEject762x54mm'
     bSpawnShellsOutBottom=true
 
-    ClientProjectileClass=Class'DH_DP27Bullet'
+    ClientProjectileClass=Class'DH_DP27LateBullet'
     bUsesTracers=true
     TracerFrequency=5
-    ClientTracerClass=Class'DH_DP27TracerBullet'
+    ClientTracerClass=Class'DH_DP27LateTracerBullet'
 
     WA_Idle="idle_DP28"
     WA_IdleEmpty="idle_DP28"

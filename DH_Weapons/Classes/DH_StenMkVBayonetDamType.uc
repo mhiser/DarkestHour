@@ -3,7 +3,7 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_StenMkVBashDamType extends DHWeaponBashDamageType
+class DH_StenMkVBayonetDamType extends DHWeaponBayonetDamageType
     abstract;
 
 defaultproperties
