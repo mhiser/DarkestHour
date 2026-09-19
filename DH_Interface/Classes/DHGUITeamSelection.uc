@@ -172,7 +172,7 @@ function SelectTeam(int Team)
     SelectedTeam = Team;
 
     // Important check
-    if (PC == none && GRI == none)
+    if (PC == none || GRI == none)
     {
         return;
     }

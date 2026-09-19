@@ -109,7 +109,7 @@ simulated function bool IsFocused()
 {
     local int i;
 
-    if (ViewportOwner == none && ViewportOwner.Actor == none && ViewportOwner.Actor.Player == none)
+    if (ViewportOwner == none || ViewportOwner.Actor == none || ViewportOwner.Actor.Player == none)
     {
         return false;
     }

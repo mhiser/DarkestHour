@@ -897,7 +897,7 @@ function DrawPitch(Canvas C, DHVehicleWeaponPawn VWP)
     local float CurvatureConstant;
     local string Label;
 
-    if (C == none || VWP == none && VWP.VehicleBase != none)
+    if (C == none || VWP == none || VWP.VehicleBase == none)
     {
         return;
     }

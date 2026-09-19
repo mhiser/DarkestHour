@@ -5909,14 +5909,35 @@ simulated function bool GetSquadLeaderParadropLocation(out Vector ParadropLocati
 
 simulated function ClientSquadInvite(string SenderName, string SquadName, int TeamIndex, int SquadIndex)
 {
-    if (!bIgnoreSquadInvitations)
-    {
-        Class'DHSquadInviteInteraction'.default.SenderName = SenderName;
-        Class'DHSquadInviteInteraction'.default.SquadName = SquadName;
-        Class'DHSquadInviteInteraction'.default.TeamIndex = TeamIndex;
-        Class'DHSquadInviteInteraction'.default.SquadIndex = SquadIndex;
+    local DHSquadInviteInteraction Invite;
+    local int i;
 
-        Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player);
+    if (bIgnoreSquadInvitations || Player == none || Player.InteractionMaster == none)
+    {
+        return;
+    }
+
+    Invite = DHSquadInviteInteraction(Player.InteractionMaster.AddInteraction("DH_Engine.DHSquadInviteInteraction", Player));
+
+    if (Invite == none)
+    {
+        for (i = Player.LocalInteractions.Length - 1; i >= 0; --i)
+        {
+            Invite = DHSquadInviteInteraction(Player.LocalInteractions[i]);
+
+            if (Invite != none)
+            {
+                break;
+            }
+        }
+    }
+
+    if (Invite != none)
+    {
+        Invite.SenderName = SenderName;
+        Invite.SquadName = SquadName;
+        Invite.TeamIndex = TeamIndex;
+        Invite.SquadIndex = SquadIndex;
     }
 }
 
@@ -6001,7 +6022,7 @@ exec function Speak(string ChannelTitle)
     PRI = DHPlayerReplicationInfo(PlayerReplicationInfo);
     VRI = DHVoiceReplicationInfo(VoiceReplicationInfo);
 
-    if (VRI == none && PRI == none)
+    if (VRI == none || PRI == none)
     {
         return;
     }
