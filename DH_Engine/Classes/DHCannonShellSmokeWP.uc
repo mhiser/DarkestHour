@@ -21,12 +21,18 @@ simulated function HandleDestruction()
     if (Role == ROLE_Authority)
     {
         // Spawn a hurt radius actor.
-        HurtRadius = Spawn(Class'DHHurtRadius',,, Location);
-        HurtRadius.DamageAmount = GasDamage;
-        HurtRadius.DamageRadius = GasRadius;
-        HurtRadius.LifeSpan = GasEffectDuration;
-        HurtRadius.DamageType = GasDamageClass;
-        HurtRadius.SetDamageTimerRate(2.0);
+        HurtRadius = Spawn(Class'DHHurtRadius', self,, Location);
+
+        if (HurtRadius != none)
+        {
+            HurtRadius.Instigator = Instigator;
+            HurtRadius.SetDelayedDamageInstigatorController(InstigatorController);
+            HurtRadius.DamageAmount = GasDamage;
+            HurtRadius.DamageRadius = GasRadius;
+            HurtRadius.LifeSpan = GasEffectDuration;
+            HurtRadius.DamageType = GasDamageClass;
+            HurtRadius.SetDamageTimerRate(2.0);
+        }
     }
 }
 
