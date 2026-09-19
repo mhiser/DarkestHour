@@ -9,7 +9,7 @@ defaultproperties
 {
     Skins(2)=Texture'DHGermanCharactersTex.WH_1'  //shirt
 
-    BodySkins(2)=Texture'DHGermanCharactersTex.SS_Autumn' //standart pants and SS insignia
+    BodySkins(0)=Texture'DHGermanCharactersTex.SS_Autumn' //standart pants and SS insignia
 
     Mesh=SkeletalMesh'DHCharactersGER_anm.Ger_Soldat_mix'
 }
