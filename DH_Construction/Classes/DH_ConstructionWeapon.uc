@@ -380,6 +380,7 @@ function ServerCreateConstruction(class<DHConstruction> ConstructionClass, Actor
         return;
     }
 
+    C.SupplyWithdrawals = Withdrawals;
     C.InstigatorController = DHPlayer(Instigator.Controller);
     C.VariantIndex = VariantIndex;
     C.SkinIndex = Context.SkinIndex;
