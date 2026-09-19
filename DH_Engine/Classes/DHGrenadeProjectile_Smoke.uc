@@ -34,6 +34,8 @@ function SpawnGasHurtRadius()
 
     if (HurtRadiusActor != none)
     {
+        HurtRadiusActor.Instigator = Instigator;
+        HurtRadiusActor.SetDelayedDamageInstigatorController(InstigatorController);
         HurtRadiusActor.DamageAmount = WhitePhosphorusGasDamageAmount;
         HurtRadiusActor.DamageRadius = WhitePhosphorusGasDamageRadius;
         HurtRadiusActor.LifeSpan = WhitePhosphorusGasDamageLifeSpan;

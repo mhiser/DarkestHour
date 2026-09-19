@@ -16,6 +16,7 @@ defaultproperties
     DamageOverlayMaterial=none
 
     bArmorStops=false
+    bDelayedDamage=true
     FlashFog=(X=312.500000,Y=468.7500000,Z=468.7500000)
     bCausesBlood=false
 
