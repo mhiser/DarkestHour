@@ -31,17 +31,22 @@ simulated function OnConstructed()
     }
 }
 
+simulated state Constructed
+{
+    simulated function EndState()
+    {
+        super.EndState();
+
+        DestroySpawnPoint();
+    }
+}
+
 simulated function OnBroken()
 {
     super.OnBroken();
 
-    if (Role == ROLE_Authority)
-    {
-        if (SpawnPoint != none)
-        {
-            SpawnPoint.Destroy();
-        }
-    }
+    DestroySpawnPoint();
+
     // "A Vehicle Pool has been destroyed."
     Class'DarkestHourGame'.static.BroadcastTeamLocalizedMessage(Level, GetTeamIndex(), Class'DHVehiclePoolMessage', 3);
 }
@@ -50,14 +55,16 @@ simulated event Destroyed()
 {
     super.Destroyed();
 
-    if (Role == ROLE_Authority)
-    {
-        if (SpawnPoint != none)
-        {
-            SpawnPoint.Destroy();
-        }
-    }
+    DestroySpawnPoint();
+}
 
+function DestroySpawnPoint()
+{
+    if (Role == ROLE_Authority && SpawnPoint != none)
+    {
+        SpawnPoint.Destroy();
+        SpawnPoint = none;
+    }
 }
 
 defaultproperties
@@ -110,4 +117,3 @@ defaultproperties
 
     CompletionPointValue=500
 }
-
