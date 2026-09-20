@@ -84,6 +84,7 @@ function static TreeMap_string_string ParseHeaders(string S)
 function Timer()
 {
     local string TransferEncoding, SetCookie;
+    local string CookieString;
     local string Response;
     local string Command;
     local string Content;
@@ -217,8 +218,6 @@ function Timer()
             Command $= HeaderKeys[i] $ ":" @ Value $ MyLink.CRLF;
         }
 
-        Command $= MyLink.CRLF;
-
         if (Session != none && Session.Cookies != none)
         {
             HeaderKeys = Session.Cookies.GetKeys();
@@ -227,11 +226,22 @@ function Timer()
             {
                 Session.Cookies.Get(HeaderKeys[i], O);
 
-                Command $= HeaderKeys[i] $ ":" @ HTTPCookie(O).Value $ MyLink.CRLF;
+                if (CookieString != "")
+                {
+                    CookieString $= "; ";
+                }
+
+                CookieString $= HeaderKeys[i] $ "=" $ HTTPCookie(O).Value;
+            }
+
+            if (CookieString != "")
+            {
+                Command $= "Cookie:" @ CookieString $ MyLink.CRLF;
             }
         }
 
-        // TODO: Add Cookies to the headers
+        // End of the header block.
+        Command $= MyLink.CRLF;
 
         MyLink.SendCommand(Command);
         MyLink.WaitForCount(0, Timeout, 0);

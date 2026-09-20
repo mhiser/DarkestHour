@@ -3,7 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_KV1Tank_Snow extends DH_KV1Tank;  //wip class
+// Unfinished and currently unreachable: its defaultproperties are commented out
+// below and its parent DH_KV1Tank extends DHDeprecated, which is notplaceable.
+class DH_KV1Tank_Snow extends DH_KV1Tank;
 
 /*
 defaultproperties

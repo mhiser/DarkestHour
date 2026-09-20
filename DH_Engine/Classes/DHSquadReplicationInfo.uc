@@ -845,7 +845,7 @@ function int CreateSquad(DHPlayerReplicationInfo PRI, optional string Name)
 }
 
 // Changes the squad leader. Returns true if the squad leader was successfully changed.
-// NOTE: Duplicates functionality of `ComandeerSquad` function.
+// NOTE: Duplicates functionality of `CommandeerSquad` function.
 function bool ChangeSquadLeader(DHPlayerReplicationInfo PRI, int TeamIndex, int SquadIndex, DHPlayerReplicationInfo NewSquadLeader)
 {
     local DHBot Bot;

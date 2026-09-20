@@ -16,7 +16,8 @@ defaultproperties
     GroupOffset=2
     Priority=2
 
-    // TODO: this explodes like 1 or 2 seconds after being thrown, fuze length is not working
+    // The fuze length is read here, seeded into DHExplosiveWeapon.CurrentFuzeTime & passed to the
+    // thrown charge by DHThrownExplosiveFire.SpawnProjectile, so it burns down while the charge is held
 
     Mesh=SkeletalMesh'Common_Satchel_1st.Sachel_Charge'
     Skins(2)=Texture'Weapons1st_tex.SatchelCharge'

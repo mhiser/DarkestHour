@@ -22,17 +22,28 @@ event PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    ResetToInitialState();
+}
+
+// New function to put the sunlight into its initial state, used from PostBeginPlay & when the level is reset for a new round
+simulated function ResetToInitialState()
+{
     // Work out the starting light color
     bIsOn = bInitiallyOn;
 
     if (bIsOn)
     {
-        RGBSetColor(OnColor);
+        CurrentColor = OnColor;
     }
     else
     {
-        RGBSetColor(OffColor);
+        CurrentColor = OffColor;
     }
+
+    RGBSetColor(CurrentColor);
+
+    TimeSinceTriggered = 0.0;
+    SwapTime = default.SwapTime;
 
     // We only tick if we're fading
     if (bInitiallyFading)
@@ -181,9 +192,13 @@ function Trigger(Actor Other, Pawn EventInstigator)
     }
 }
 
-simulated function Reset() // TODO: fix
+// Modified to put the sunlight back into its initial state when the level is reset for a new round
+// The light properties are replicated by the engine, so restoring them on the server also restores them on clients
+simulated function Reset()
 {
     super.Reset();
+
+    ResetToInitialState();
 }
 
 defaultproperties

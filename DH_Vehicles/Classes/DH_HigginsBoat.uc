@@ -258,18 +258,24 @@ simulated function RampDownIdle()
     DestroyedAnimName = RampDownIdleAnim;
 }
 
-// Matt: hack fix because of the way the Higgins boat has been modelled, which completely screws up the normal use of a collision static mesh in the animation mesh
-// Boat is modelled with the wrong rotation & Z location, so in the animation mesh it is given 90 degrees yaw, a little pitch & a Z axis translation
-// But the engine doesn't apply the rotation & translation to the col mesh, & also a col mesh doesn't move with the boat animation as it pitches & rolls
-// As a workaround, I've taken the col mesh out of the anim mesh, & instead added it as a col mesh actor, attached to the relevant bone
-// With a separate col mesh actor for the bow ramp, attached to ramp hinge bone so it lowers & raises with ramp, providing protection to players inside when raised
-// TODO - adjust Higgins animation mesh to remove unwanted rotation & translation (incl re-make/adjust its animations) - then delete this override & add back normal col static mesh
+// Matt: the Higgins boat is modelled with the wrong rotation & Z location, so the animation mesh corrects it with 90 degrees yaw, a little pitch & a Z axis translation
+// The engine doesn't apply that mesh level correction to a collision static mesh held in the anim mesh, & such a col mesh also doesn't move as the boat pitches & rolls
+// So the col mesh was taken out of the anim mesh & added as col mesh actors attached to the relevant bones, with a separate one for the bow ramp
+// The ramp col mesh is attached to the ramp hinge bone so it lowers & raises with the ramp, protecting players inside the boat while it is raised
+// The boat's col meshes are modelled in the raw mesh space, i.e. without the anim mesh's rotation & translation, so they attach with TS_Bone & not the usual TS_Actor
+// This is not something the col mesh actor transform code can work out for us, as the space the col mesh was modelled in is a property of the art, not of the skeleton
+// A real fix is an art change: re-do the Higgins animation mesh without the unwanted rotation & translation (which means re-making its animations), then the col
+// meshes can go back into the anim mesh in the normal way & this override can be deleted
 simulated function SpawnVehicleAttachments()
 {
     super.SpawnVehicleAttachments();
 
-    // The ramp rotation gets screwed up, so simply set it correctly using a literal (from trial & error!) instead of complex calcs
-    CollisionAttachments[0].Actor.SetRelativeRotation(rot(0, 0, 650));
+    // The ramp hinge bone carries its own rotation in the reference pose, which the raw mesh space ramp col mesh does not account for
+    // TS_Bone deliberately does no rotation correction, so we apply the small roll that lines the ramp col mesh up with the ramp (value found by trial & error)
+    if (CollisionAttachments.Length > 0 && CollisionAttachments[0].Actor != none)
+    {
+        CollisionAttachments[0].Actor.SetRelativeRotation(rot(0, 0, 650));
+    }
 
     // Remove enough collision from the boat so it doesn't sink into the ground & it bumps into objects, but its crude collision boxes are ignored by projectiles
     // NB - can't just set in default props, as col meshes need to copy boat's intended collision settings when they spawn, so have to change these afterwards
@@ -292,8 +298,8 @@ defaultproperties
     bIsApc=true
     bKeyVehicle=true // means we skip usual check for nearby friendly players before resetting empty vehicle & making it respawn
     VehicleMass=6.0
-    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0)) // col mesh for bow ramp
-    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01)) // col mesh for rest of the boat
+    CollisionAttachments(0)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.HigginsBoat_ramp_coll',AttachBone="Master2z00",Offset=(X=0.0,Y=-252.0,Z=-36.0),TransformSpace=TS_Bone) // col mesh for bow ramp
+    CollisionAttachments(1)=(StaticMesh=StaticMesh'DH_allies_vehicles_stc.HigginsBoat_coll',AttachBone="Master1z00",Offset=(X=0.0,Y=0.0,Z=0.01),TransformSpace=TS_Bone) // col mesh for rest of the boat
     MaxDesireability=1.9
 
     MapIconMaterial=Texture'DH_InterfaceArt2_tex.craft_topdown'

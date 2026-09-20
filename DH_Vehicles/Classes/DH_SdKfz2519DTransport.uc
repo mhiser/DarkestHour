@@ -7,11 +7,15 @@ class DH_SdKfz2519DTransport extends DH_Sdkfz251Transport;
 
 // HACK: We can't override default values in PassengerPawns because the
 // system will create weapon pawns even if items in the array are emptied
-// out. Instead we clear out the array manually.
+// out. DHVehicle.PostBeginPlay() appends one DHPassengerPawn position for
+// every entry in PassengerPawns, and defaultproperties cannot shrink an
+// inherited dynamic array, so a blanked out entry would still give this
+// vehicle a rider position it has no room for. Instead we clear out the
+// array manually, which has to happen before the Super that reads it.
 //
 // TODO:
 //   * Create a common class for hanomag-based vehicles to avoid inheriting
-//     PassengerPawns.
+//     PassengerPawns. DH_SdKfz251_22Transport repeats the same hack.
 simulated function PostBeginPlay()
 {
     PassengerPawns.Length = 0;

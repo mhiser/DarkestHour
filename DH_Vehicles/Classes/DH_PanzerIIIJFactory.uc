@@ -5,8 +5,6 @@
 
 class DH_PanzerIIIJFactory extends DH_GermanVehicles;
 
-//WIP
-
 defaultproperties
 {
     VehicleClass=Class'DH_PanzerIIIJTank'

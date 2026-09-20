@@ -29,5 +29,6 @@ defaultproperties
 
     DriverAnimationChannelBone="US_CAMERA_COM"
 
-    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
+    // Intentional, and the same rule as the parent class: large HE never resupplies.
+    MaxTertiaryAmmo=0
 }

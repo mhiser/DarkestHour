@@ -92,6 +92,7 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
     name AttachBone, optional Vector AttachOffset, optional class<DHCollisionMeshActor> ColMeshActorClass, optional ETransformSpace TransformSpace)
 {
     local DHCollisionMeshActor ColMeshActor;
+    local Rotator              BoneRotation;
 
     if (AttachBone == '' || ColMeshOwner == none)
     {
@@ -112,20 +113,18 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
         switch (TransformSpace)
         {
             case TS_Actor:
-                // BUG: This is very incorrect. This tries to space-switch the mesh from actor-local to bone-local space but it fails
-                // if the actor's rotation and the attachment bone rotation do not match.
-                if (AttachOffset != vect(0.0, 0.0, 0.0))
-                {
-                    ColMeshActor.SetRelativeLocation(AttachOffset);
-                }
-                else
-                {
-                    ColMeshActor.SetRelativeRotation(ColMeshOwner.Rotation - ColMeshOwner.GetBoneRotation(AttachBone)); // as attachment bone may be modelled with rotation in reference pose
-                    ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << (ColMeshOwner.Rotation - ColMeshActor.RelativeRotation));
-                }
+                // Col mesh is modelled in the owner actor's own space, but attaching it to a bone puts it in that bone's space
+                // So we place it by expressing the owner's world transform relative to the attachment bone, which the engine then re-applies as bone space
+                // NB the attachment bone may be modelled with its own rotation in the reference pose, so the two rotations have to be composed properly
+                // Subtracting one rotator from another only gives the right answer when both rotations differ about a single axis, so we go via quaternions
+                // Any AttachOffset is an offset in the owner's actor space, applied before the switch into bone space
+                BoneRotation = ColMeshOwner.GetBoneRotation(AttachBone);
+                ColMeshActor.SetRelativeRotation(QuatToRotator(QuatProduct(QuatFromRotator(ColMeshOwner.Rotation), QuatInvert(QuatFromRotator(BoneRotation)))));
+                ColMeshActor.SetRelativeLocation((ColMeshOwner.Location + (AttachOffset >> ColMeshOwner.Rotation) - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << BoneRotation);
                 break;
             case TS_Bone:
-                ColMeshOwner.SetRelativeLocation(AttachOffset);
+                // Col mesh is modelled in the attachment bone's own space, so it just needs any specified bone space offset
+                ColMeshActor.SetRelativeLocation(AttachOffset);
                 break;
             default:
                 break;

@@ -525,10 +525,18 @@ simulated function PokeTerrain(float Radius, float Depth)
     {
         if (TI != none)
         {
-            // HACK: There is a terrible bug on Mac/Linux platforms where having a
-            // larger poke radius causes the terrain to be poked excessively.
-            // This little trick fixes the problem, even if it doesn't look
-            // as nice!
+            // Engine limitation, Mac and Linux builds only: TerrainInfo.PokeTerrain
+            // does not honor the radius the way the Windows build does. Any
+            // radius above 1 pokes a far larger area than was asked for and
+            // leaves the ground around a trench or foxhole visibly mangled.
+            // Clamping the radius to 1 still produces a usable hole on those
+            // platforms, at the cost of a less pleasing shape.
+            //
+            // This is a deliberate platform split, not an oversight. Do not
+            // remove it without first confirming on a Mac client and a Linux
+            // client that a full-radius poke no longer wrecks the surrounding
+            // terrain. Reviewed 2026-09-20 and kept: there is no evidence the
+            // engine defect has been fixed.
             if (PlatformIsMacOS() || PlatformIsUnix())
             {
                 Radius = 1.0;
@@ -981,10 +989,21 @@ simulated state Constructed
         return bCanBeTornDownWhenConstructed && (bCanBeTornDownByFriendlies || (P != none && P.GetTeamNum() != TeamIndex));
     }
 
-// This is required because we cannot call TakeDamage within the KImpact
-// function, because down the line is disables karma collision after going into
-// the broken state, causing a crash in native code. Delaying the damage until
-// the next frame works to avoid the crash!
+// Engine limitation: TakeDamage must not be called from inside KImpact.
+// The damage can send the construction into the Broken state, whose teardown
+// disables karma collision while the native karma impact callback we are still
+// inside is walking its contact list. The result is a crash in native code.
+// Bouncing through this state label defers the damage until after that native
+// callback has returned, which avoids the crash.
+//
+// KImpact reaches this label with GotoState(GetStateName(), 'DelayedDamage'),
+// which keeps the current state (Constructed, or Cut, which extends it) and
+// therefore does not re-run BeginState.
+//
+// Do not inline this TakeDamage call back into KImpact, and do not convert it
+// to SetTimer: this actor already uses its single timer slot for BrokenLifespan
+// in the Broken state, so a delayed-damage timer and the broken-lifespan timer
+// would clobber each other. Reviewed 2026-09-20 and kept.
 DelayedDamage:
     Sleep(0.1);
     TakeDamage(DelayedDamage, none, vect(0, 0, 0), vect(0, 0, 0), DelayedDamageType);
