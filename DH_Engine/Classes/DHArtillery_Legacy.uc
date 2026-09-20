@@ -212,11 +212,15 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
         return -1;
     }
 
-    // Legacy artillery deliberately runs at a multiple of the map's Red Orchestra strike
-    // interval. The interval in the map's level info is an Ostfront-era value and is far too
-    // short for DH, and it cannot be retuned per map from here, so the multiplier is DH's
-    // design value for the legacy cadence rather than a temporary measure. Change
-    // ConfirmIntervalMultiplier (or a subclass default) to retune it.
+    // Legacy artillery is meant to run at a multiple of the map's Red Orchestra strike
+    // interval. That interval is an Ostfront-era value and is far too short for DH, and it
+    // cannot be retuned per map from here, so the multiplier is DH's design value for the
+    // legacy cadence rather than a temporary measure. Change ConfirmIntervalMultiplier to
+    // retune it.
+    //
+    // Note that nothing calls this override today, and DH_LevelInfo.ConfirmIntervalSeconds
+    // is declared but never read, so the multiplier has no runtime effect in the current
+    // code. Wiring the override up is a separate piece of work.
     return LI.GetStrikeInterval(TeamIndex) * default.ConfirmIntervalMultiplier;
 }
 
