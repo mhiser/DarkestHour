@@ -32,7 +32,6 @@ replication
 simulated event PostBeginPlay()
 {
     local Texture TheProjTexture;
-    local Color   StartColor, StartTint;
 
     super.PostBeginPlay();
 
@@ -56,7 +55,15 @@ simulated event PostBeginPlay()
     // Attach the texture to the displayed projector texture
     ProjTexture = ScriptTexture;
 
-    // Work out the starting light color
+    // Work out the starting light color & set the projector to its initial state
+    ResetToInitialState();
+}
+
+// New function to put the projector into its initial state, used from PostBeginPlay & when the level is reset for a new round
+simulated function ResetToInitialState()
+{
+    local Color StartColor, StartTint;
+
     bIsOn = bInitiallyOn;
 
     // If we're on the client side, start in the right mode based on its trigger
@@ -81,6 +88,9 @@ simulated event PostBeginPlay()
 
     // Set the color
     SetColors(StartColor, StartTint);
+
+    TimeSinceTriggered = 0.0;
+    SwapTime = default.SwapTime;
 
     // We only tick if we're fading
     if (bInitiallyFading)
@@ -215,9 +225,19 @@ simulated event ClientTrigger()
     bIsOn = !bIsOn;
 }
 
-simulated function Reset() // TODO: fix
+// Modified to put the projector back into its initial state when the level is reset for a new round
+simulated function Reset()
 {
     super.Reset();
+
+    // On the server, restoring bClientTrigger to its default makes clients revert too
+    // If it has been toggled an odd number of times the change replicates, & the client's ClientTrigger() flips its state back
+    if (Role == ROLE_Authority)
+    {
+        bClientTrigger = default.bClientTrigger;
+    }
+
+    ResetToInitialState();
 }
 
 defaultproperties
