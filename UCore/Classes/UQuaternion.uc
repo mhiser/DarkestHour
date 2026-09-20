@@ -13,14 +13,16 @@ static function float Angle(Quat A, Quat B)
     return Acos(A.W) * 2.0f;
 }
 
-// TODO: Not tested.
+// Builds a quaternion from an orthonormal axis triple. Used by the camera
+// code in DHMortarCannonPawn and DH_Fiat1435MGPawn.
 static function Quat FromAxes(Vector XAxis, Vector YAxis, Vector ZAxis)
 {
     local float Trace, S;
     local Quat Result;
     local float M11, M12, M13, M21, M22, M23, M31, M32, M33;
 
-    // TODO: remove this later, inefficient.
+    // Named matrix elements, so the branches below read like the reference
+    // formula. UnrealScript has no matrix type to index instead.
     M11 = XAxis.X;
     M12 = XAxis.Y;
     M13 = XAxis.Z;
