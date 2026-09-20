@@ -117,18 +117,10 @@ simulated static function DHCollisionMeshActor AttachCollisionMesh(Actor ColMesh
                 // So we place it by expressing the owner's world transform relative to the attachment bone, which the engine then re-applies as bone space
                 // NB the attachment bone may be modelled with its own rotation in the reference pose, so the two rotations have to be composed properly
                 // Subtracting one rotator from another only gives the right answer when both rotations differ about a single axis, so we go via quaternions
-                if (AttachOffset != vect(0.0, 0.0, 0.0))
-                {
-                    // A specified offset is taken as a plain bone space offset & no space switch is done at all
-                    // Only the Higgins boat uses this, as its col meshes are modelled in the raw mesh space rather than the actor space
-                    ColMeshActor.SetRelativeLocation(AttachOffset);
-                }
-                else
-                {
-                    BoneRotation = ColMeshOwner.GetBoneRotation(AttachBone);
-                    ColMeshActor.SetRelativeRotation(QuatToRotator(QuatProduct(QuatFromRotator(ColMeshOwner.Rotation), QuatInvert(QuatFromRotator(BoneRotation)))));
-                    ColMeshActor.SetRelativeLocation((ColMeshOwner.Location - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << BoneRotation);
-                }
+                // Any AttachOffset is an offset in the owner's actor space, applied before the switch into bone space
+                BoneRotation = ColMeshOwner.GetBoneRotation(AttachBone);
+                ColMeshActor.SetRelativeRotation(QuatToRotator(QuatProduct(QuatFromRotator(ColMeshOwner.Rotation), QuatInvert(QuatFromRotator(BoneRotation)))));
+                ColMeshActor.SetRelativeLocation((ColMeshOwner.Location + (AttachOffset >> ColMeshOwner.Rotation) - ColMeshOwner.GetBoneCoords(AttachBone).Origin) << BoneRotation);
                 break;
             case TS_Bone:
                 // Col mesh is modelled in the attachment bone's own space, so it just needs any specified bone space offset
