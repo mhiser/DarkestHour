@@ -14,10 +14,19 @@ function CreateTabs()
 {
     super.CreateTabs();
 
-    // Activate the Internet tab immediately
-    // HACK: The Steam Master Server is not responding.
-    // As an emergency measure, put the player in the LAN list.
-    // We are forcibly populating the LAN list from the MainMenu so that the official servers appear.
+    // Open the browser on the Favorites tab, PanelCaption[0], instead of the
+    // Internet tab. The Steam master server query that feeds the Internet tab
+    // has been unreliable for this title, and an Internet-first browser opened
+    // on an empty list, which reads as a broken game. DHMainMenu seeds
+    // Favorites with the official servers on startup, see
+    // DHMainMenu.AddOfficialServersToFavorites and its StaticFavorites list, so
+    // this tab always has something joinable in it.
+    //
+    // This only chooses the tab that is selected first. The Internet tab is
+    // still created, see PanelClass(2) below, and the player can still switch
+    // to it and query the master server. Reviewed 2026-09-20 and kept: the
+    // default moves back to Internet only when the master server query is
+    // confirmed reliable again, not on the assumption that it is.
     c_Tabs.ActivateTabByName(PanelCaption[0], true);
 }
 
