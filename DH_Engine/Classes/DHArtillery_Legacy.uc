@@ -20,6 +20,10 @@ var int SpreadAmount; // randomised spread of each shell (in UU)
 
 var DHGameReplicationInfo GRI;
 
+// Multiplier applied to the map's Red Orchestra strike interval to get the interval between
+// confirmed legacy artillery requests (see GetConfirmIntervalSecondsOverride)
+var int ConfirmIntervalMultiplier;
+
 // From deprecated ROArtillerySpawner, optimised a little
 // And setting a LifeSpan for this actor, as a fail-safe in case the sequence of timers somehow gets interrupted & we don't ever get to end of arty strike
 function PostBeginPlay()
@@ -208,13 +212,21 @@ static function int GetConfirmIntervalSecondsOverride(int TeamIndex, LevelInfo L
         return -1;
     }
 
-    // HACK: The 2x multiplier is a stopgap solution to stop artillery from
-    // being so damned frequent.
-    return LI.GetStrikeInterval(TeamIndex) * 2.0;
+    // Legacy artillery is meant to run at a multiple of the map's Red Orchestra strike
+    // interval. That interval is an Ostfront-era value and is far too short for DH, and it
+    // cannot be retuned per map from here, so the multiplier is DH's design value for the
+    // legacy cadence rather than a temporary measure. Change ConfirmIntervalMultiplier to
+    // retune it.
+    //
+    // Note that nothing calls this override today, and DH_LevelInfo.ConfirmIntervalSeconds
+    // is declared but never read, so the multiplier has no runtime effect in the current
+    // code. Wiring the override up is a separate piece of work.
+    return LI.GetStrikeInterval(TeamIndex) * default.ConfirmIntervalMultiplier;
 }
 
 defaultproperties
 {
+    ConfirmIntervalMultiplier=2
     ActiveArtilleryMarkerClass=Class'DHMapMarker_OngoingBarrage'
     ArtilleryType=ArtyType_Barrage
 }
