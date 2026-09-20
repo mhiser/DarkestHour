@@ -28,9 +28,16 @@ simulated event Tick(float DeltaTime)
     {
         OnTick(DeltaTime);
 
-        // HACK: This inventory system doesn't like what we're trying to do with it.
-        // This bit of garbage saves us if we get into a state where the proxy has
-        // been destroyed but the weapon is still hanging around.
+        // This is not a real inventory item. It is handed out on demand
+        // (DHCommandMenu_ConstructionGroup.OnSelect -> DHPawn.ServerGiveWeapon) and
+        // destroys itself the moment it is lowered (state LoweringWeapon below),
+        // whereas the inventory system expects a weapon to stay in the chain until
+        // it is thrown away or runs out of ammo. The cursor is client side only and
+        // is created in BringUp, so the cursor and the pawn's Weapon reference can
+        // come apart. If the cursor is gone while this is still the current weapon
+        // and there is nothing to switch back to, the player is holding an invisible
+        // weapon whose only inputs (Fire and ROIronSights) both need the cursor, so
+        // put it down and pick something else.
         if (ProxyCursor == none && Instigator.Weapon == self && Instigator.Weapon.OldWeapon == none)
         {
             // We've no weapon to go back to so just put this down, subsequently destroying it
@@ -131,7 +138,10 @@ simulated function ROIronSights()
     {
         if (P != none && P.CanSwitchWeapon())
         {
-            ProxyCursor.Destroy();
+            if (ProxyCursor != none)
+            {
+                ProxyCursor.Destroy();
+            }
 
             if (Instigator.Weapon.OldWeapon != none)
             {
@@ -167,12 +177,21 @@ simulated function Fire(float F)
 
         if (ShouldSwitchToLastWeaponOnPlacement())
         {
-            ProxyCursor.Destroy();
+            if (ProxyCursor != none)
+            {
+                ProxyCursor.Destroy();
+            }
 
             if (Instigator.Weapon != none && Instigator.Weapon.OldWeapon != none)
             {
-                // HACK: This stops a standalone client from immediately firing
-                // their previous weapon.
+                // The fire button that confirmed the placement is still held. In
+                // a standalone game there is no server round trip to swallow it, so
+                // the weapon we switch back to takes the same press as soon as it is
+                // ready to fire. Putting it back to WS_Hidden makes BringUp treat it
+                // as a fresh selection, so it plays its select animation and goes
+                // through RaisingWeapon instead of arriving ready to fire.
+                // DHPawn.ClientExitATRotation does the same for the AT gun rotate
+                // weapon, which is also put away by a fire press.
                 if (Level.NetMode == NM_Standalone)
                 {
                     Instigator.Weapon.OldWeapon.ClientState = WS_Hidden;

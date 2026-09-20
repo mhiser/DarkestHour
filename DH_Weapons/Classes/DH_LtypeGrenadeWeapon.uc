@@ -15,5 +15,11 @@ defaultproperties
     Mesh=SkeletalMesh'DH_Ltype_anm.Ltype_1st'
     GroupOffset=4
     DisplayFOV=80.0
-    bHasReleaseLever=true   // HACK: stops the grenade from automatically throwing after a certain amount of time.
+    // bHasReleaseLever is the flag for "this explosive is not primed while it is
+    // held". DHThrownExplosiveFire.ModeHoldFire only sets bPrimed when the flag is
+    // false, and ModeTick only runs the fuze down (and finally throws the grenade
+    // out of the player's hand and kills him) while bPrimed is true. The Tipo L has
+    // an impact fuze, so it must never cook off in the hand. The SRCM mod. 35, the
+    // other impact grenade, sets the flag for the same reason.
+    bHasReleaseLever=true
 }
