@@ -212,6 +212,7 @@ var     float                       ShadowZOffset;           // vertical positio
 var     class<DHConstructionSupplyAttachment>   SupplyAttachmentClass;
 var     name                                    SupplyAttachmentBone;
 var     DHConstructionSupplyAttachment          SupplyAttachment;
+var     int                                     SupplyAttachmentCount;          // replicated supply count of our own SupplyAttachment, or -1 if we have none, so clients can draw it on the HUD
 var     int                                     SupplyAttachmentSupplyCountMax; // If non-zero, set the max supply count for this attachment.
 var     Vector                                  SupplyAttachmentOffset;
 var     Rotator                                 SupplyAttachmentRotation;
@@ -291,7 +292,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, TouchingSupplyCount, bWheelsAreDamaged;
+        bEngineOff, bRightTrackDamaged, bLeftTrackDamaged, SpawnPointAttachment, SupplyAttachment, SupplyAttachmentCount, TouchingSupplyCount, bWheelsAreDamaged;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)
@@ -783,7 +784,7 @@ simulated function Tick(float DeltaTime)
         // Update the dust color.
         UpdateDustColor();
 
-        if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled() && SupplyAttachment != none)
+        if (TouchingSupplyCount >= 0 && Controller != none && IsLocallyControlled() && SupplyAttachmentCount >= 0)
         {
             PlayerController(Controller).ReceiveLocalizedMessage(Class'DHSupplyVehicleMessage',, Controller.PlayerReplicationInfo,, self);
         }
@@ -3107,6 +3108,18 @@ simulated function UpdatePrecacheStaticMeshes()
     }
 }
 
+// New function assigned as the OnSupplyCountChanged delegate of our SupplyAttachment
+// The attachment actor is not reliably known to a net client, so we copy its count into a
+// replicated int on the vehicle, which every occupant already has, for the HUD to draw
+function OnSupplyAttachmentCountChanged(DHConstructionSupplyAttachment CSA)
+{
+    if (CSA != none)
+    {
+        SupplyAttachmentCount = int(CSA.GetSupplyCount());
+        NetUpdateTime = Level.TimeSeconds - 1.0;
+    }
+}
+
 // New function to spawn specific attachments & variety of possible generic vehicle attachments (which avoid need for subclassed common functionality & lots of instance variables)
 simulated function SpawnVehicleAttachments()
 {
@@ -3159,12 +3172,19 @@ simulated function SpawnVehicleAttachments()
                 SupplyAttachment.SetTeamIndex(VehicleTeam);
                 SupplyAttachment.SetStaticMesh(SupplyAttachmentStaticMesh);
 
+                // Mirror the supply count into a replicated int, so net clients
+                // (including passengers) can draw it on the HUD
+                SupplyAttachment.OnSupplyCountChanged = OnSupplyAttachmentCountChanged;
+
                 if (SupplyAttachmentSupplyCountMax > 0)
                 {
                     SupplyAttachment.SetSupplyCountMax(SupplyAttachmentSupplyCountMax);
                 }
 
                 SupplyAttachment.SetInitialSupply();
+
+                // Seed the replicated count, in case SetInitialSupply() did not change it
+                OnSupplyAttachmentCountChanged(SupplyAttachment);
             }
         }
 
@@ -3749,6 +3769,7 @@ simulated function DestroyAttachments()
         if (SupplyAttachment != none)
         {
             SupplyAttachment.Destroy();
+            SupplyAttachmentCount = -1;
         }
 
         if (MapIconAttachment != none)
@@ -4694,6 +4715,7 @@ defaultproperties
     SupplyLoadCountMax=250
     SupplyDropInterval=5
     TouchingSupplyCount=-1
+    SupplyAttachmentCount=-1
     SupplyDropSound=Sound'Inf_Weapons_Foley.AmmoPickup'
     SupplyDropSoundRadius=10.0
     SupplyDropSoundVolume=1.0
