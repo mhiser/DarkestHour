@@ -443,7 +443,11 @@ function Vector GetNormalizedLocation(float X, float Y)
     return Location;
 }
 
-// TODO:
+// Returns true if a map marker at the given normalized map location falls within
+// the marker icon's hit radius of the cursor's normalized map location.
+// Note the hit radius is a constant in full map space, while DHDrawIconOnMap
+// transforms only the icon's position by the viewport, so a zoomed in map has a
+// hit radius larger than the icon that is drawn.
 function bool IsMarkerUnderCursor(float LocationX, float LocationY, float CursorMapLocationX, float CursorMapLocationY)
 {
     local float X, Y, D;
