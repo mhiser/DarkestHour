@@ -1754,7 +1754,16 @@ function int GetBotNewRole(ROBot ThisBot, int BotTeamNum)
                 }
             }
 
-            // Temp hack to prevent bots from getting MG roles
+            // Bots are kept out of MG and AT rifle roles because they cannot fire those weapons at all.
+            // DHMGWeapon, DH_PTRDWeapon and DH_Wz35Weapon all default bMustFireWhileSighted=true, and
+            // DHProjectileWeapon.ReadyToFire() refuses to fire while IsSighted() is false, i.e. unless
+            // the pawn has the bipod deployed or is using sights. Both of those states are only ever
+            // entered through the exec functions Deploy() and ROIronSights(), which are driven by player
+            // input, and no bot code (DHBot, DHTeamAI) deploys a bipod or sights a weapon. DHProjectileWeapon
+            // also guards its "you must be deployed" warning with InstigatorIsHumanControlled(), for the same
+            // reason. A bot given one of these roles would therefore carry a weapon it can never fire, and
+            // DH_Wz35Weapon additionally sets bMustBeDeployedToBolt, so a bot could not even work its bolt.
+            // Remove this filter only together with bot support for deploying a bipod.
             if (RoleLimitReached(ThisBot.PlayerReplicationInfo.Team.TeamIndex, MyRole) || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_LMG
                 || GetRoleInfo(BotTeamNum, MyRole).PrimaryWeaponType == WT_PTRD)
             {
