@@ -97,12 +97,14 @@ function ResetMaterials()
     }
 }
 
-/*
-simulated function Reset() // TODO: fix
+// Modified to reset all the triggered materials to their initial state when the level is reset for a new round
+// This runs on the server & the ReplicationInfos relay the reset to clients, which is where the materials actually get reset
+function Reset()
 {
     super.Reset();
+
+    ResetMaterials();
 }
-*/
 
 defaultproperties
 {

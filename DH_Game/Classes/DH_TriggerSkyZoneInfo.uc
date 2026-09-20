@@ -18,6 +18,12 @@ simulated event PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    ResetToInitialState();
+}
+
+// New function to put the sky zone into its initial state, used from PostBeginPlay & when the level is reset for a new round
+simulated function ResetToInitialState()
+{
     // Work out the starting light color
     bIsOn = bInitiallyOn;
 
@@ -34,6 +40,8 @@ simulated event PostBeginPlay()
     {
         DistanceFogColor = OffColor;
     }
+
+    TimeSinceTriggered = 0.0;
 
     // We only tick if we're fading
     if (bInitiallyFading)
@@ -106,9 +114,19 @@ simulated event ClientTrigger()
     bIsOn = !bIsOn;
 }
 
-simulated function Reset() // TODO: fix
+// Modified to put the sky zone back into its initial state when the level is reset for a new round
+simulated function Reset()
 {
     super.Reset();
+
+    // On the server, restoring bClientTrigger to its default makes clients revert too
+    // If it has been toggled an odd number of times the change replicates, & the client's ClientTrigger() flips its state back
+    if (Role == ROLE_Authority)
+    {
+        bClientTrigger = default.bClientTrigger;
+    }
+
+    ResetToInitialState();
 }
 
 defaultproperties

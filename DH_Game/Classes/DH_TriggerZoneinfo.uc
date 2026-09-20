@@ -22,6 +22,12 @@ simulated event PostBeginPlay()
 {
     super.PostBeginPlay();
 
+    ResetToInitialState();
+}
+
+// New function to put the zone into its initial state, used from PostBeginPlay & when the level is reset for a new round
+simulated function ResetToInitialState()
+{
     // Work out the starting light color:
     bIsOn = bInitiallyOn;
 
@@ -40,6 +46,9 @@ simulated event PostBeginPlay()
     {
             DistanceFogColor = OffColor;
     }
+
+    TimeSinceTriggered = 0;
+    SwapTime = default.SwapTime;
 
     // If we're fading, we tick:
     if (bInitiallyFading)
@@ -137,11 +146,19 @@ simulated event ClientTrigger()
 
 }
 
+// Modified to put the zone back into its initial state when the level is reset for a new round
 simulated function Reset()
 {
     super.Reset();
 
-    //TODO: Fix.
+    // On the server, restoring bClientTrigger to its default makes clients revert too
+    // If it has been toggled an odd number of times the change replicates, & the client's ClientTrigger() flips its state back
+    if (Role == ROLE_Authority)
+    {
+        bClientTrigger = default.bClientTrigger;
+    }
+
+    ResetToInitialState();
 }
 
 defaultproperties
