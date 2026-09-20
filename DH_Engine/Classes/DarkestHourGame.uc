@@ -1173,14 +1173,17 @@ function int ReduceDamage(int Damage, Pawn Injured, Pawn InstigatedBy, Vector Hi
 }
 
 /**
-// TODO: this override has somewhat scrambled this function as returns from the Super in GameInfo are being treated as returns from the function here
-// That means this override can ignore functionality in other, closer Super classes (UnrealMPGameInfo & DeathMatch)
-// A return from the Super in GameInfo would return 'control' to the Super class that called it (UnrealMPGameInfo)
-// Functionality in the closer Supers would & should still execute - so this override needs re-working
-// Suggest best way may be to re-state the long GameInfo Super as a separate function (called say Login_GameInfo or whatever), modified as required
-// That could be called from here & return as it normally would, & this function could handle the closer Supers & any extra DH code
-// Re-factoring this as one function could be done but would end up overly complicated, with lots of extra nested bracketing and/or local bools based on 'soft return' results
-// Matt, Aug 2017
+// This override calls no Super, it re-states the whole Login chain inline. The chain is:
+// DarkestHourGame > ROTeamGame > TeamGame > DeathMatch > UnrealMPGameInfo > GameInfo
+// ROTeamGame & TeamGame do not override Login, so only three bodies matter & all three are re-stated here, in chain order:
+//   1. The MaxLives / LateEntryLives loop at the top is DeathMatch.Login's work before its Super call
+//   2. The long middle section is GameInfo.Login, minus the ChangeTeam() call that DH deliberately drops
+//   3. The voice chat, bLatecomer & NM_Standalone blocks at the end are UnrealMPGameInfo.Login's and
+//      DeathMatch.Login's work after their Super calls, so they must run for every player GameInfo would return
+// Keep it that way if this is edited. An early return in the middle silently drops the section 3 blocks, which is
+// what used to happen to spectators. The 'return none' error paths are fine to return early from, as the closer
+// Supers either guard against a none player (UnrealMPGameInfo) or would accessed-none on it (DeathMatch)
+// Original note by Matt, Aug 2017
 */
 // Modified for Squad system and so it doesn't call ChangeTeam() when a player "Logins" to the server
 // Will also make it so when a player joins the server it doesn't say they joined Axis before they actually pick their team
@@ -1370,55 +1373,65 @@ event PlayerController Login(string Portal, string Options, out string Error)
         NewPlayer.PlayerReplicationInfo.bOutOfLives = true;
         NumSpectators++;
 
-        return NewPlayer;
+        // GameInfo.Login returns here, but that only returns control to UnrealMPGameInfo.Login & DeathMatch.Login,
+        // whose work is re-stated below, so a spectator must fall through to it & not return early
     }
-
-    NewPlayer.StartSpot = StartSpot;
-
-    // Init player's administrative privileges & log it
-    if (AccessControl != none && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
+    else
     {
-        AccessControl.AdminEntered(NewPlayer, InAdminName);
+        NewPlayer.StartSpot = StartSpot;
+
+        // Init player's administrative privileges & log it
+        if (AccessControl != none && AccessControl.AdminLogin(NewPlayer, InAdminName, InPassword))
+        {
+            AccessControl.AdminEntered(NewPlayer, InAdminName);
+        }
+
+        NumPlayers++;
+
+        if (NumPlayers > 20)
+        {
+            bLargeGameVOIP = true;
+        }
+
+        bWelcomePending = true;
+
+        // WTF is this?
+        if (bTestMode)
+        {
+            TestLevel();
+        }
+
+        // If delayed start, don't give a pawn to the player yet
+        // Normal for multiplayer games
+        if (bDelayedStart)
+        {
+            NewPlayer.GotoState('PlayerWaiting');
+        }
     }
 
-    NumPlayers++;
-
-    if (NumPlayers > 20)
-    {
-        bLargeGameVOIP = true;
-    }
-
-    bWelcomePending = true;
-
-    // WTF is this?
-    if (bTestMode)
-    {
-        TestLevel();
-    }
-
-    // If delayed start, don't give a pawn to the player yet
-    // Normal for multiplayer games
-    if (bDelayedStart)
-    {
-        NewPlayer.GotoState('PlayerWaiting');
-    }
-
-    // Init voice chat if we are in a MP environment
+    // Init voice chat if we are in a MP environment (re-stated from UnrealMPGameInfo.Login)
     if (Level.NetMode == NM_DedicatedServer || Level.NetMode == NM_ListenServer)
     {
         NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
 
-        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == PC)
+        // The local player controller is not bound until after Login returns from SpawnPlayActor,
+        // so on a listen server GetLocalPlayerController() is still none during the host's own Login
+        // The none test is what actually catches the host, & the NewPlayer test covers a build where
+        // the binding happens earlier, so between them the host gets voice chat set up exactly once
+        if (Level.NetMode == NM_ListenServer &&
+            (Level.GetLocalPlayerController() == none || Level.GetLocalPlayerController() == NewPlayer))
         {
             NewPlayer.InitializeVoiceChat();
         }
     }
 
+    // Re-stated from DeathMatch.Login
     if (bMustJoinBeforeStart && GameReplicationInfo.bMatchHasBegun)
     {
         UnrealPlayer(NewPlayer).bLatecomer = true;
     }
 
+    // Re-stated from DeathMatch.Login
     if (Level.NetMode == NM_Standalone)
     {
         if (NewPlayer.PlayerReplicationInfo.bOnlySpectator)
