@@ -278,7 +278,9 @@ simulated function PostFire()
 
         if (RWA != none)
         {
-            RWA.bOutOfAmmo = true; // IMPORTANT TODO: Don't just assume that we're out of ammo after firing. Check the ammo count!
+            // Set the attachment's ammo status from the weapon's actual load state, instead of just assuming the tube is empty after firing
+            // For a rocket weapon, AmmoCharge[0] is the loaded/unloaded flag (see IsLoaded), not a round count, & spare rockets are the mags in PrimaryAmmoArray
+            RWA.bOutOfAmmo = !IsLoaded();
         }
     }
 
