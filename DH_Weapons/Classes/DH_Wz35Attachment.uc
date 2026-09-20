@@ -171,7 +171,7 @@ defaultproperties
     PA_CrouchAltFire="crouch_single_wz35"
     PA_ProneAltFire="prone_single_wz35"
     PA_FireLastShot="stand_shoothip_wz35"
-    PA_IronFireLastShot="stand_shootironptrd"
+    PA_IronFireLastShot="stand_shootiron_ptrd"
     PA_CrouchFireLastShot="crouch_shoot_wz35"
     PA_ProneFireLastShot="prone_shoot_wz35"
 }

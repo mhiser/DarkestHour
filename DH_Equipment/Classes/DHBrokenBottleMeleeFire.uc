@@ -41,7 +41,7 @@ defaultproperties
     BashHoldAnim="bash_hold_bottle"
     BashAnim="bash_attack_bottle"
     BashFinishAnim="bash_return_bottle"
-    //TearDownSound=SoundGroup'DH_WeaponSounds.shovel_hit'
+    TearDownSound=SoundGroup'DH_WeaponSounds.shovel_hit'
     // TODO: These sounds got lost in a merge & need to be added back.
     // GroundBashSound=Sound'DH_WeaponSounds.BottleSmack'
     // GroundStabSound=Sound'DH_WeaponSounds.BottleSmack'
