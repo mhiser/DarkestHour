@@ -39,6 +39,8 @@ struct VehicleAttachment
     var float           CullDistance;
     var bool            bAttachToWeapon;    // When true, attach this to a weapon instead of the base vehicle.
     var int             WeaponAttachIndex;  // When bAttachToWeapon is true, the index of the weapon to attach to.
+    // Space the attachment's static mesh is modelled in (CollisionAttachments only - ignored by decorative VehicleAttachments)
+    var DHCollisionMeshActor.ETransformSpace TransformSpace;
     // Maps the vehicle skin to the attachment skin.
     // Used so that attachments on skin variants automatically use the correct textures.
     var array<SkinIndexMap> SkinIndexMap;
@@ -3377,7 +3379,8 @@ simulated function SpawnVehicleAttachments()
     for (i = 0; i < CollisionAttachments.Length; ++i)
     {
         CollisionAttachments[i].Actor = Class'DHCollisionMeshActor'.static.AttachCollisionMesh
-            (self, CollisionAttachments[i].StaticMesh, CollisionAttachments[i].AttachBone, CollisionAttachments[i].Offset, class<DHCollisionMeshActor>(CollisionAttachments[i].AttachClass));
+            (self, CollisionAttachments[i].StaticMesh, CollisionAttachments[i].AttachBone, CollisionAttachments[i].Offset, class<DHCollisionMeshActor>(CollisionAttachments[i].AttachClass),
+            CollisionAttachments[i].TransformSpace);
     }
 }
 
