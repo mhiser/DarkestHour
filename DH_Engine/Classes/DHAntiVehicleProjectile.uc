@@ -889,7 +889,8 @@ simulated function FailToPenetrateArmor(Vector HitLocation, Vector HitNormal, Ac
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round explodes on vehicle armor
-    // TODO: just a note that this does the same as calling SpawnExplosionEffects() except this plays VehicleDeflectSound/ShellDeflectEffectClass instead of VehicleHitSound/ShellHitVehicleEffectClass
+    // Note this does much the same as calling SpawnExplosionEffects(), except it plays VehicleDeflectSound instead of VehicleHitSound,
+    // as the round did not penetrate & the penetration sound is an important audio cue that must not play on a failed penetration
     else if (bExplodesOnArmor && !bRoundDeflected)
     {
         if (bDebuggingText && Role == ROLE_Authority)
@@ -906,10 +907,17 @@ simulated function FailToPenetrateArmor(Vector HitLocation, Vector HitNormal, Ac
 
         if (EffectIsRelevant(EffectLocation, false))
         {
-            Spawn(ShellDeflectEffectClass,,, EffectLocation, Rotator(HitNormal));
+            Spawn(ShellDeflectEffectClass,,, EffectLocation, Rotator(HitNormal)); // impact sparks on the armor
         }
 
-        bDidExplosionFX = true; // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects // TODO: need to fix - no visible explosion when HE hits tank
+        // Also spawn the round's explosion effect, so the round visibly explodes on the armor instead of just looking like a ricochet
+        // Relevance check is skipped for an HE explosion, as it's big & not instantaneous, so a player may hear it & turn towards it & must be able to see it (as in SpawnExplosionEffects)
+        if (Level.NetMode != NM_DedicatedServer && ShellHitVehicleEffectClass != none && (RoundType == RT_HE || EffectIsRelevant(EffectLocation, false)))
+        {
+            Spawn(ShellHitVehicleEffectClass,,, EffectLocation, Rotator(HitNormal));
+        }
+
+        bDidExplosionFX = true; // we've played specific explosion effects, so flag this to avoid calling SpawnExplosionEffects
         Explode(HitLocation + ExploWallOut * HitNormal, HitNormal);
     }
     // Round deflects off vehicle armor
