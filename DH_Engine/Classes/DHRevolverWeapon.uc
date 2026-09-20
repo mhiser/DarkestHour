@@ -2,8 +2,18 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// WARNING: THIS WHOLE CLASS IS A HACK, REMOVE IT WHEN WE MOVE SINGLEs RELOADS
-// TO THE MAIN PROJECTILE WEAPON CLASS!
+// Revolvers are loaded one round at a time, and the one-round-at-a-time reload
+// is implemented in DHBoltActionWeapon, not in DHProjectileWeapon: the
+// EReloadState machine, PlayPreReload / PlaySingleReload / PlayPostReload,
+// SetSingleReloadTimer, GetRoundsToLoad, PerformReload and GiveBackAmmo all
+// live there. So a revolver extends the bolt action class and then switches off
+// the bolt with bShouldSkipBolt.
+//
+// This class can only go away once that reload state machine is moved up into
+// DHProjectileWeapon. Note that it is also an animation category in its own
+// right: DHPawn tests IsA('DHRevolverWeapon') next to IsA('DHPistolWeapon') when
+// picking put-away and swap animations, so those tests have to be retargeted
+// as part of any such move.
 //==============================================================================
 
 class DHRevolverWeapon extends DHBoltActionWeapon
