@@ -13,8 +13,10 @@ var float               ResponseSoundVolume;
 var float               ResponseSoundRadius;
 
 // Map icon
+// The icon itself is DHHud's MapIconCarriedRadio sprite widget, which indexes
+// into the shared overhead map icon atlas. This flag only controls whether the
+// radio is drawn at all.
 var bool                bShouldShowOnSituationMap;
-var Material            MapIconMaterial;
 
 var DHArtilleryRequest  Request;
 
@@ -428,6 +430,5 @@ defaultproperties
 
     UsageDistanceMaximumMeters=2.0
 
-    MapIconMaterial=none    // TODO: fill this in
     bShouldShowOnSituationMap=true
 }
