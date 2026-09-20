@@ -3,7 +3,9 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_KV1CannonPawn extends DH_KV1ECannonPawn;  //wip class
+// Unfinished and currently unreachable: see DH_KV1Cannon. Nothing spawns this
+// pawn while DH_KV1Tank is deprecated.
+class DH_KV1CannonPawn extends DH_KV1ECannonPawn;
 
 defaultproperties
 {
