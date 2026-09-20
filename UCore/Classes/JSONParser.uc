@@ -380,18 +380,41 @@ private function JSONNumber ReadNumber()
 
     T = InputBuffer.Peek(1);
 
-    switch (T)
+    if (T == ".")
     {
-        case ".":
+        InputBuffer.Seekg(SEEK_Current, 1);
+
+        S $= T $ ReadDigits();
+
+        T = InputBuffer.Peek(1);
+    }
+
+    // Exponent (eg. 1e-3, 2.5E+10)
+    if (T == "e" || T == "E")
+    {
+        InputBuffer.Seekg(SEEK_Current, 1);
+
+        S $= T;
+
+        T = InputBuffer.Peek(1);
+
+        if (T == "+" || T == "-")
+        {
             InputBuffer.Seekg(SEEK_Current, 1);
-            S $= T $ ReadDigits();
-            break;
-        case "e":
-        case "E":
-            //TODO: fill this in
-            break;
-        default:
-            break;
+
+            S $= T;
+        }
+
+        T = ReadDigits();
+
+        if (Len(T) == 0)
+        {
+            ParseError("Expected digits");
+
+            return none;
+        }
+
+        S $= T;
     }
 
     return Class'JSONNumber'.static.Create(S);
