@@ -58,7 +58,10 @@ defaultproperties
     InitialTertiaryAmmo=5
     MaxPrimaryAmmo=28
     MaxSecondaryAmmo=5
-    MaxTertiaryAmmo=0   // HACK: This stops the large HE shells from being resupplied. Replace this later.
+    // Intentional: MaxTertiaryAmmo is the resupply ceiling in DHVehicleCannon.ResupplyAmmo,
+    // so a zero means the large HE bombs never resupply. The crew gets the
+    // InitialTertiaryAmmo load for the life of the mortar and no more.
+    MaxTertiaryAmmo=0
 
     Spread=0.01
     SecondarySpread=0.01
