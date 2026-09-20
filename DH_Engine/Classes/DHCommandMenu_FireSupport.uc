@@ -307,9 +307,14 @@ function bool IsOptionDisabled(int OptionIndex)
 
 defaultproperties
 {
-    // HACK: Because engine doesn't handle arrays of empty structs properly, we have to force the array to have at least one element, otherwise
-    //  it will be deserialized as an array with one less element than it should have. In future this will be handled by a post-processing
-    //  pass on the translation files.
+    // Engine limitation: every string member of Option is localized, so the
+    // engine rebuilds this array from the localization files. An element whose
+    // localized strings are all empty is dropped during that pass, and the
+    // array comes back short, which shifts the remaining options onto the wrong
+    // slots or loses one entirely. The ActionText=" " on each element below is
+    // a deliberate single-space placeholder that keeps the element alive; these
+    // options draw their icon, not their action text. It is not dead data, and
+    // removing it breaks the fire support menu. Reviewed 2026-09-20 and kept.
     Options(0)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_OffMap',Material=Texture'DH_InterfaceArt2_tex.Artillery')
     Options(1)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_Smoke',Material=Texture'DH_InterfaceArt2_tex.FireSupportSmoke')
     Options(2)=(ActionText=" ",OptionalObject=Class'DHMapMarker_FireSupport_HE',Material=Texture'DH_InterfaceArt2_tex.FireSupportHE')
