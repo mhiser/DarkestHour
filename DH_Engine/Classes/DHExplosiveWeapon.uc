@@ -10,6 +10,8 @@ var     name    PreFireHoldAnim;     // animation for holding the arm back ready
 
 var     bool    bPrimed;             // the nade is primed
 var     bool    bHasReleaseLever;    // this explosive has a lever that must be released to arm the weapon
+                                     // it also means the explosive is not primed while it is held: see DHThrownExplosiveFire.ModeHoldFire,
+                                     // so impact fuzed grenades set it to stop the fuze running down in the player's hand
 var     bool    bAlreadyExploded;    // the nade already blew up in your hands
 var     Range   FuzeLengthRange;     // how long this grenade will take to go off
 var     float   CurrentFuzeTime;     // how much fuse time is left

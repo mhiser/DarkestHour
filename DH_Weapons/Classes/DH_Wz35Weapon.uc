@@ -30,22 +30,51 @@ simulated function ROIronSights()
     Deploy();
 }
 
-// HACK: Bypass special reload logic in `DHBoltActionWeapon` to fix the issues with reloading.
+// The Wz. 35 is a magazine fed bolt action. It needs DHBoltActionWeapon for the
+// bolt cycle (state WorkingBolt, bMustBeDeployedToBolt, bShouldZoomWhenBolting)
+// but not for its reload, which strips loose rounds one at a time out of dummy
+// magazines and drives the animation chain PreReload -> SingleReload ->
+// PostReload. This rifle carries real 4 round magazines and has none of those
+// animations, so the three reload entry points below are routed back to the plain
+// magazine reload in DHProjectileWeapon. The PTRD-41, the other anti-tank rifle,
+// avoids the problem by extending DHProjectileWeapon directly, at the cost of
+// having no bolt cycle at all.
+// PerformReload has to be routed here and not just at the entry points, because
+// bMustReloadWithBipodDeployed sends the reload to state ReloadingBipod, which is
+// declared on DHProjectileWeapon and so does not pick up DHBoltActionWeapon's
+// overrides of state Reloading. Its EndState calls PerformReload() virtually, and
+// the DHBoltActionWeapon version would load a single round and treat the
+// magazines as a pile of loose rounds.
 function PerformReload(optional int Count)
 {
     super(DHProjectileWeapon).PerformReload(Count);
 }
 
+// Routed to the magazine reload: the DHBoltActionWeapon version only sets
+// NumRoundsToLoad, which is used solely by the loose round state machine.
 simulated function ClientDoReload(optional byte NumRounds)
 {
     super(DHProjectileWeapon).ClientDoReload(NumRounds);
 }
 
+// Routed to the magazine reload, which also picks state ReloadingBipod when the
+// bipod is down. The DHBoltActionWeapon version always uses state Reloading.
 function ServerRequestReload()
 {
     super(DHProjectileWeapon).ServerRequestReload();
 }
 
+// Modified to enforce bMustReloadWithBipodDeployed, which DHBoltActionWeapon's
+// AllowReload does not check (it does not call the DHProjectileWeapon version).
+// Without this, reloading while undeployed reaches state Reloading, the loose
+// round state machine whose animations this rifle does not have.
+simulated function bool AllowReload()
+{
+    return super(DHProjectileWeapon).AllowReload() && super.AllowReload();
+}
+
+// Modified to report a full magazine rather than a count of loose rounds, so a
+// reload is offered whenever a spare magazine is carried.
 simulated function byte GetRoundsToLoad()
 {
     if (CurrentMagCount == 0)
@@ -74,7 +103,9 @@ simulated state WorkingBolt
 
 simulated state ReloadingBipod
 {
-    // Modified to not do reload interrupting logic.
+    // Fire button does nothing during a reload. Without this the global Fire above
+    // would work the bolt part way through the reload, because CanWorkBolt only
+    // rejects a busy weapon when it is not already waiting to bolt.
     simulated function Fire(float F);
 }
 
