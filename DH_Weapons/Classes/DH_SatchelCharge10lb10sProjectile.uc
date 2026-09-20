@@ -203,6 +203,11 @@ defaultproperties
     CollisionRadius=4.0
     CollisionHeight=4.0
 
+    // Must be longer than the fuze length set by DH_SatchelCharge10lb10sWeapon (15 seconds)
+    // The inherited Projectile LifeSpan of 14 seconds would otherwise destroy the satchel before
+    // its fuze timer fires, playing the explosion effect from Destroyed() but doing no damage
+    LifeSpan=20.0
+
     Speed=300.0
     Damage=1200.0
     DamageRadius=1200.0
