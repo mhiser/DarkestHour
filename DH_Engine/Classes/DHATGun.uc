@@ -382,19 +382,38 @@ function ServerRotate(byte InputRotationFactor)
     HandleRotate(F);
 }
 
-// HACK - This will only make sure the gun visibly rotates on the client
-// that initiates the rotation. It might look stuck to other clients.
-/*Used to set any properties on the client when it enters rotation*/
+// Runs only on the machine of the player who started the rotation
+// (DH_ATGunRotateWeapon.OnEnterRotation calls it behind
+// InstigatorIsLocallyControlled). It has two jobs, and neither of them is
+// keeping other clients in sync:
+//
+//  1. It spawns RotationProjector, the rotation radius decal. That projector
+//     is a purely local effect with no other spawn site in the codebase, so
+//     deleting this call removes the decal for the player rotating the gun.
+//  2. It stops karma on that one client immediately, a replication round trip
+//     before the replicated bIsBeingRotated reaches PostNetReceive, which
+//     performs the same SetPhysics(PHYS_None) for every other client. Without
+//     it the gun keeps simulating karma locally while the player's own input
+//     is already turning it.
+//
+// The commented out SetCollision(false, true, true) in state Rotating's
+// BeginState is not a replacement. It only changes server side collision, it
+// does not spawn the projector, and the NOTE there records that it drops the
+// gun through the world.
+//
+// Other clients get their traverse from the replicated RotatingActor that the
+// gun is based on, and the authoritative yaw from the SentinelString snap in
+// PostNetReceive. Both of those can lag behind what the rotating player sees.
+// Reviewed 2026-09-20 (issue #45): still required, do not delete.
 simulated function ClientEnterRotation()
 {
-
     local Vector X, Y, Z;
     local FinalBlend FinalMaterial;
     local FadeColor FadeMaterial;
     local Combiner CombinerMaterial;
 
-    //collision properties hack
-
+    // The authority already did this in state Rotating's BeginState, so on a
+    // listen server this would be a redundant second call.
     if (Role != ROLE_Authority)
     {
         SetPhysics(PHYS_None);
