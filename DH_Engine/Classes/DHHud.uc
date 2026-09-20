@@ -3254,7 +3254,7 @@ function DrawVehiclePointSphere()
             {
                 C = RedColor;
             }
-            else if (V.VehHitpoints[i].HitPointType == HP_Driver) // should not exist as deprecated, but draw in black is present by mistake
+            else if (V.VehHitpoints[i].HitPointType == HP_Driver) // the driver hit point type is repurposed as a damageable wheel (see DHVehicle.TakeDamage & HasDamageableWheels)
             {
                 C = BlackColor;
             }
