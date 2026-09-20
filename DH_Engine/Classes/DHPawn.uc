@@ -27,7 +27,11 @@ var     array<Material> FaceSkins;        // list of body & face skins to be ran
 var     array<Material> BodySkins;
 var     byte    PackedSkinIndexes;        // server packs selected index numbers for body & face skins into a single byte for most efficient replication to net clients
 var     bool    bReversedSkinsSlots;      // some player meshes have the typical body & face skin slots reversed, so this allows it to be assigned per pawn class
-                                          // TODO: fix the reversed skins indexing in player meshes to standardise with body is 0 & face is 1 (as in RO), then delete this
+                                          // NOTE: this is not a temporary shim. The reversed slot order is baked into the skeletal meshes in the binary
+                                          // character packages, and it is the majority case: 108 pawn classes set this true (nearly all of DH_SovietPlayers,
+                                          // plus the DH_AmericanPawn, DH_GermanPawn and British lines) against 22 that set it false. Moving everything to the
+                                          // RO order (body is 0 & face is 1) means re-exporting those meshes and reworking every Skins(0)/Skins(1) default
+                                          // that feeds them, so this flag stays until that art work is done.
 
 var     class<DHPawnFootstepSounds> FootstepSoundsClass;
 
