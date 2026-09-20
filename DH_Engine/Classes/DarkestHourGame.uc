@@ -1414,7 +1414,12 @@ event PlayerController Login(string Portal, string Options, out string Error)
     {
         NewPlayer.VoiceReplicationInfo = VoiceReplicationInfo;
 
-        if (Level.NetMode == NM_ListenServer && Level.GetLocalPlayerController() == NewPlayer)
+        // The local player controller is not bound until after Login returns from SpawnPlayActor,
+        // so on a listen server GetLocalPlayerController() is still none during the host's own Login
+        // The none test is what actually catches the host, & the NewPlayer test covers a build where
+        // the binding happens earlier, so between them the host gets voice chat set up exactly once
+        if (Level.NetMode == NM_ListenServer &&
+            (Level.GetLocalPlayerController() == none || Level.GetLocalPlayerController() == NewPlayer))
         {
             NewPlayer.InitializeVoiceChat();
         }
