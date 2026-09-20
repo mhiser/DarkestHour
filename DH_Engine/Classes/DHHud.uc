@@ -1926,11 +1926,13 @@ function DrawVehicleIcon(Canvas Canvas, ROVehicle Vehicle, optional ROVehicleWea
     //////////////////////////////////
     // Draw vehicle supply information
     //////////////////////////////////
-    if (V != none && V.SupplyAttachment != none)    // TODO: make this work for clients as well
+    // SupplyAttachmentCount is replicated by the vehicle (-1 if it has no supply attachment),
+    // so this draws for every occupant, on a net client as well as on the server
+    if (V != none && V.SupplyAttachmentCount >= 0)
     {
         DrawSpriteWidgetClipped(Canvas, VehicleSuppliesIcon, Coords);
         Canvas.Font = GetSmallerMenuFont(Canvas);
-        VehicleSuppliesText.Text = string(int(V.SupplyAttachment.GetSupplyCount()));
+        VehicleSuppliesText.Text = string(V.SupplyAttachmentCount);
         DrawTextWidgetClipped(Canvas, VehicleSuppliesText, Coords);
     }
 }
