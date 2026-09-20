@@ -3509,8 +3509,7 @@ function DrawMap(Canvas C, AbsoluteCoordsInfo SubCoords, DHPlayer Player, Box Vi
                 (DHGRI.Radios[i].TeamIndex == NEUTRAL_TEAM_INDEX || DHGRI.Radios[i].TeamIndex == OwnerTeam) &&
                 DHGRI.Radios[i].IsPlayerQualified(DHPlayer(PlayerOwner)))
             {
-                // MapIconCarriedRadio
-                DHDrawIconOnMap(C, SubCoords, MapIconRadio, MyMapScale, DHGRI.Radios[i].Location, MapCenter, Viewport);
+                DHDrawIconOnMap(C, SubCoords, MapIconCarriedRadio, MyMapScale, DHGRI.Radios[i].Location, MapCenter, Viewport);
             }
         }
 
