@@ -126,6 +126,8 @@ simulated function PostBeginPlay()
     }
 }
 
+// A timed projectile class must have a LifeSpan longer than the FuzeLengthRange of the weapon that throws it,
+// otherwise the engine destroys it before this timer fires & it explodes visually without doing any damage
 function SetFuzeLength(float FuzeLength)
 {
     if (FuzeType == FT_Timed)
