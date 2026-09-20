@@ -3,7 +3,12 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DHCSTankCrewmanRoles extends DHAlliedTankCrewmanRoles //WIP; to do: radio voices, uniforms
+// Unfinished, and not reachable in game: unlike DHPOLTankCrewmanRoles and
+// DHSOVTankCrewmanRoles this abstract class has no concrete subclass, so there
+// is no role with RolePawns for a Czechoslovak tank crew uniform. Outstanding
+// work is art and audio: a crewman pawn class with its uniform, and the vehicle
+// and radio lines that DHCzechVoice is still missing.
+class DHCSTankCrewmanRoles extends DHAlliedTankCrewmanRoles
     abstract;
 
 defaultproperties

@@ -3,7 +3,10 @@
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
 
-class DH_KV1Cannon extends DH_KV1ECannon;  //wip class
+// Unfinished and currently unreachable: the only reference to this gun is in
+// DH_KV1Tank, which extends DHDeprecated with its defaultproperties commented
+// out, and no KV-1 (non-E) record exists in DHVehicleRegistry.
+class DH_KV1Cannon extends DH_KV1ECannon;
 
 defaultproperties
 {
