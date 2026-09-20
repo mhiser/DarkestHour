@@ -2198,8 +2198,12 @@ ignores SeePlayer, HearNoise, Bump;
             {
                 if (Pawn.bUpAndOut && Pawn.CheckWaterJump(HitNormal)) // check for water jump
                 {
-                    // TODO: Fix jump out of water issue
-                    Pawn.Velocity.Z = FMax(Pawn.JumpZ, 420.0) + 2.0 * Pawn.CollisionRadius; // set here so physics uses this for remainder of tick
+                    // Modified from the stock UT2004 value of FMax(JumpZ, 420.0) + 2.0 * CollisionRadius,
+                    // which launched the pawn well above its own jump height when climbing out of water.
+                    // DH exits the water with no more upward speed than a normal standing jump, with 250
+                    // (the engine's default OutOfWaterZ, as used by Pawn.JumpOutOfWater for bots) as the
+                    // floor so a pawn with a low JumpZ can still clear the water's edge.
+                    Pawn.Velocity.Z = FMax(Pawn.JumpZ, 250.0); // set here so physics uses this for remainder of tick
                     GotoState(Pawn.LandMovementState);
                 }
                 else if (Pawn.Velocity.Z > 160.0 || !Pawn.TouchingWaterVolume())
