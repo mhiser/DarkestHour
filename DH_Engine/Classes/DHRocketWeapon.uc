@@ -290,6 +290,31 @@ simulated function PostFire()
     }
 }
 
+// Modified to set a new attachment's ammo status from the weapon's load state, as it spawns with bOutOfAmmo=false even when the tube is empty
+// Net clients use the replicated bOutOfAmmo to decide whether to show the warhead (see DHRocketWeaponAttachment.PostNetReceive)
+function AttachToPawn(Pawn P)
+{
+    super.AttachToPawn(P);
+
+    UpdateAttachmentLoadStatus();
+}
+
+function AttachToPawnHidden(Pawn P)
+{
+    super.AttachToPawnHidden(P);
+
+    UpdateAttachmentLoadStatus();
+}
+
+// New function to set the 3rd person attachment's ammo status from whether a rocket is loaded
+function UpdateAttachmentLoadStatus()
+{
+    if (ROWeaponAttachment(ThirdPersonActor) != none)
+    {
+        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = !IsLoaded();
+    }
+}
+
 // Modified so bots don't go straight to the reloading state if weapon not loaded
 simulated function OutOfAmmo()
 {
@@ -318,6 +343,8 @@ simulated function bool AllowReload()
     {
         return super.AllowReload();
     }
+
+    return false; // a rocket is already loaded, so there is nothing to reload
 }
 
 // Modified to prevent proning while reloading

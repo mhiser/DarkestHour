@@ -7,7 +7,7 @@ class DHRocketWeaponAttachment extends DHWeaponAttachment
     abstract;
 
 var           bool bHideWarheadWhenFired;
-var           bool bWarheadVisible;
+var           bool bWarheadVisible;  // whether this machine currently shows the warhead (kept in sync by ShowWarhead, not replicated)
 var           name WarheadBoneName;
 var           int  WarheadScaleSlot; // Slot holding the scalar values for the warhead bone
 var           Mesh EmptyMesh;        // TODO: EmptyMesh is kept for backwards compatibility. Deprecate this when possible!
@@ -20,12 +20,6 @@ var Emitter        mExhFlash3rd;
 // HACK: Fixes the issue where warhead is incorrectly shown when the weapon is pulled out.
 var     bool    bInitiallyLoaded;
 
-replication
-{
-    reliable if (bHideWarheadWhenFired && bNetDirty && Role == ROLE_Authority)
-        bWarheadVisible;
-}
-
 // Overridden to use standard muzzle flash code for non-Panzerfaust rocket weps
 simulated function PostBeginPlay()
 {
@@ -37,24 +31,27 @@ simulated function PostBeginPlay()
 
     if (bHideWarheadWhenFired)
     {
-        bWarheadVisible = bInitiallyLoaded;
         ShowWarhead(bInitiallyLoaded);
     }
 }
 
+// Modified so a net client shows the warhead only when the tube is loaded, as given by the replicated bOutOfAmmo
+// bWarheadVisible == bOutOfAmmo means the displayed state disagrees with the load state
 simulated function PostNetReceive()
 {
     super.PostNetReceive();
 
     if (bHideWarheadWhenFired && bWarheadVisible == bOutOfAmmo)
     {
-        ShowWarhead(bWarheadVisible);
+        ShowWarhead(!bOutOfAmmo);
     }
 }
 
 simulated function ShowWarhead(bool bShow)
 {
     local Mesh NewMesh;
+
+    bWarheadVisible = bShow;
 
     if (EmptyMesh != none)
     {
