@@ -2548,52 +2548,45 @@ function ServerNotifyRoles(DHPlayerReplicationInfo.ERoleSelector RoleSelector, c
     }
 }
 
-function bool IsPositionOfArtillery(Vector Position)
+// Returns true if Position matches an off-map support request of this player's
+// team whose paradrop flag equals bParadrop.
+private function bool IsPositionOfOffMapSupport(Vector Position, bool bParadrop)
 {
     local int i;
     local DHGameReplicationInfo GRI;
 
     GRI = DHGameReplicationInfo(GameReplicationInfo);
 
+    if (GRI == none)
+    {
+        return false;
+    }
+
     for (i = 0; i < arraycount(GRI.DHArtillery); i++)
     {
         if (GRI.DHArtillery[i] != none &&
             GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum() &&
-            !GRI.DHArtillery[i].IsParadrop())
+            GRI.DHArtillery[i].IsParadrop() == bParadrop)
         {
-            // to do: refactor checking if GRI.DHArtillery[i].Location == Position
-            // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
+            // Compare by distance, since an exact Location == Position check fails on rounding errors.
             if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
             {
                 return true;
             }
         }
     }
+
     return false;
+}
+
+function bool IsPositionOfArtillery(Vector Position)
+{
+    return IsPositionOfOffMapSupport(Position, false);
 }
 
 function bool IsPositionOfParadrop(Vector Position)
 {
-    local int i;
-    local DHGameReplicationInfo GRI;
-
-    GRI = DHGameReplicationInfo(GameReplicationInfo);
-
-    for (i = 0; i < arraycount(GRI.DHArtillery); i++)
-    {
-        if (GRI.DHArtillery[i] != none &&
-            GRI.DHArtillery[i].GetTeamIndex() == GetTeamNum() &&
-            GRI.DHArtillery[i].IsParadrop())
-        {
-            if (VSize(GRI.DHArtillery[i].Location - Position) < 1)
-            {
-                // to do: refactor checking if GRI.DHArtillery[i].Location == Position
-                // GRI.DHArtillery[i].Location == Position is false because of round-up errors...
-                return true;
-            }
-        }
-    }
-    return false;
+    return IsPositionOfOffMapSupport(Position, true);
 }
 
 function int GetActiveOffMapSupportNumber()
