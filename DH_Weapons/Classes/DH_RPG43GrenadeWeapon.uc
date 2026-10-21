@@ -18,4 +18,8 @@ defaultproperties
 
     GroupOffset=4
     DisplayFOV=80.0
+    // Impact fuze, so the grenade must not be primed while it is held. Without
+    // the flag, DHThrownExplosiveFire.ModeHoldFire primes it and ModeTick cooks it
+    // off in the player's hand. See DH_LtypeGrenadeWeapon for the full mechanism.
+    bHasReleaseLever=true
 }
