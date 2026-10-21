@@ -445,9 +445,11 @@ function Vector GetNormalizedLocation(float X, float Y)
 
 // Returns true if a map marker at the given normalized map location falls within
 // the marker icon's hit radius of the cursor's normalized map location.
-// Note the hit radius is a constant in full map space, while DHDrawIconOnMap
-// transforms only the icon's position by the viewport, so a zoomed in map has a
-// hit radius larger than the icon that is drawn.
+// DHDrawIconOnMap moves the icon by the viewport but keeps its drawn size constant
+// on screen. The hit radius is a fraction of the map widget, so we multiply it by
+// the viewport span to put it in full map space. The viewport is always square
+// (DHDrawIconOnMap also uses the X span for both axes), and the span is 1.0 at
+// zoom level 0.
 function bool IsMarkerUnderCursor(float LocationX, float LocationY, float CursorMapLocationX, float CursorMapLocationY)
 {
     local float X, Y, D;
@@ -456,7 +458,7 @@ function bool IsMarkerUnderCursor(float LocationX, float LocationY, float Cursor
     Y = LocationY - CursorMapLocationY;
     D = Sqrt(X * X + Y * Y);
 
-    return D <= Class'DHHud'.default.MapMarkerIcon.TextureScale * 0.5;
+    return D <= Class'DHHud'.default.MapMarkerIcon.TextureScale * 0.5 * (Viewport.Max.X - Viewport.Min.X);
 }
 
 function bool InternalOnOpen(GUIContextMenu Sender)
