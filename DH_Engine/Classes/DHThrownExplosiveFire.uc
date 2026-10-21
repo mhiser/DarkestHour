@@ -207,14 +207,31 @@ function ServerPlayFiring()
     }
 }
 
+// Returns true if this fire mode throws an impact-fuzed projectile
+// Thrown HEAT projectiles (RPG-43, Tipo L) have no FuzeType, but they only ever detonate on impact
+simulated function bool HasImpactFuze()
+{
+    local class<DHThrowableExplosiveProjectile> ExplosiveProjectileClass;
+
+    if (ClassIsChildOf(ProjectileClass, Class'DHThrowableHEATProjectile'))
+    {
+        return true;
+    }
+
+    ExplosiveProjectileClass = class<DHThrowableExplosiveProjectile>(ProjectileClass);
+
+    return ExplosiveProjectileClass != none && ExplosiveProjectileClass.default.FuzeType == FT_Impact;
+}
+
 // Implemented so explosive will blow up in player's hand if he holds a primed weapon too long
+// An impact-fuzed explosive never cooks off in the hand, even if it is primed (e.g. by pressing fire & alt fire together)
 event ModeTick(float DeltaTime)
 {
     local DHExplosiveWeapon ExplosiveWeapon;
 
     ExplosiveWeapon = DHExplosiveWeapon(Weapon);
 
-    if (ExplosiveWeapon != none && ExplosiveWeapon.bPrimed && HoldTime > 0.0)
+    if (ExplosiveWeapon != none && ExplosiveWeapon.bPrimed && HoldTime > 0.0 && !HasImpactFuze())
     {
         if (ExplosiveWeapon.CurrentFuzeTime > (AddedFuseTime * -1.0))
         {
