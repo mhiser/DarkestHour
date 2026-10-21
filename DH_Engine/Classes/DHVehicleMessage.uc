@@ -31,7 +31,6 @@ var localized string OtherCrewmanCanLockVehicle;
 
 // Other
 var localized string UnbuttonToReload;
-var localized string VehicleScuttleInitiated;
 var localized string UnbuttonHatchToChangePosition;
 
 var localized string GunObstructed;
@@ -110,9 +109,7 @@ static function string GetString(optional int Switch, optional PlayerReplication
         case 28:
             S = default.OtherCrewmanCanLockVehicle;
             break;
-        case 29:
-            S = default.VehicleScuttleInitiated;
-            break;
+//      case 29 LEFT SPARE
         case 30:
             S = Repl(default.UnbuttonHatchToChangePosition, "{0}", default.NextWeaponButtonString);
             break;
@@ -156,7 +153,6 @@ defaultproperties
     OnlyTankCrewCanLockVehicle="Only tank crew roles can lock or unlock vehicle"
     CanOnlyLockFromCrewPosition="Can only lock or unlock vehicle if you are in a tank crew position"
     OtherCrewmanCanLockVehicle="Only the most senior crew position can lock or unlock vehicle"
-    VehicleScuttleInitiated="currently deprecated"
     GunObstructed="The gun cannot fire because it is obstructed"
 
     NextWeaponButtonString="[%NEXTWEAPON%]"
