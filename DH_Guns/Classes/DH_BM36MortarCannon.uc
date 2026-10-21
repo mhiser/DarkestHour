@@ -28,6 +28,7 @@ defaultproperties
 
     // Have to set all of these in order to "remove" the third round from the parent class.
     TertiaryProjectileClass=None
+    InitialTertiaryAmmo=0
     MaxTertiaryAmmo=0
     MainAmmoChargeExtra(2)=0
     ProjectileDescriptions(2)=""
