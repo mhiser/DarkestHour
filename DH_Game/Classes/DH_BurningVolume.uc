@@ -2,14 +2,12 @@
 // Darkest Hour: Europe '44-'45
 // Copyright (c) Darklight Games.  All rights reserved.
 //==============================================================================
-// Before deleting this class, a maintainer with the map packages must confirm
-// that no map still references it: open every package under
-// DarkestHourDev/Maps in the SDK and check its actor list, or dump each .rom
-// name table and search for "DH_BurningVolume". Map packages bind actor
-// classes by name at load time, so a map that still references this class
-// fails to load once the class is gone, and that cannot be established from
-// the source tree alone. Convert any map that still uses it to DHBurningVolume
-// and re-save that map first.
+// Do not delete this class yet. An import-table scan of the 202 map packages
+// under DarkestHourDev/Maps (issue #42) found 30 maps that import it, with
+// 140 placed actors in total. Map packages bind classes by name at load
+// time, so these maps fail to load if this class is gone. Replace each actor
+// with DHBurningVolume and re-save the map before you delete this class.
+// The scan does not cover community maps outside the repo.
 //==============================================================================
 
 class DH_BurningVolume extends DHBurningVolume // just a legacy class for backwards compatibility, as DHBurningVolume is now in DH_Engine code package
