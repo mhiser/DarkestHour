@@ -128,9 +128,10 @@ simulated function PostBeginPlay()
 
 // A timed projectile class must have a LifeSpan longer than the FuzeLengthRange of the weapon that throws it,
 // otherwise the engine destroys it before this timer fires & it explodes visually without doing any damage
+// A dud gets no fuze timer, so it lies on the ground for its DudLifeSpan instead of vanishing when the fuze runs out
 function SetFuzeLength(float FuzeLength)
 {
-    if (FuzeType == FT_Timed)
+    if (FuzeType == FT_Timed && !bDud)
     {
         SetTimer(FuzeLength, false);
     }
@@ -1011,6 +1012,7 @@ defaultproperties
     DampenFactorParallel=0.8
     bFixedRotationDir=true
     DudChance=0.001 // 1 in 1000
+    DudLifeSpan=10.0 // a dud lies on the ground for a bit, then disappears
     ImpactSound=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Concrete'
     ImpactSoundDirt=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Dirt'
     ImpactSoundWood=SoundGroup'DH_ProjectileSounds.GrenadeImpacts_Wood'
