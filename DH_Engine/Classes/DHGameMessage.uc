@@ -120,17 +120,6 @@ static function string GetString(optional int Switch, optional PlayerReplication
                 return Repl(default.MaxRoleMsg, "{role}", RI.GetDisplayName());
             }
             break;
-        // To forgive type "np" or "forgive" message
-        case 18:
-            // NOTE: This is no longer used.
-            if (RelatedPRI_1 == none)
-            {
-                return "Someone" @ default.TypeForgiveMessage;
-            }
-            else
-            {
-                return RelatedPRI_1.PlayerName @ default.TypeForgiveMessage;
-            }
         // Has forgiven message
         case 19:
             if (RelatedPRI_1 == none || RelatedPRI_2 == none)
