@@ -5,18 +5,6 @@
 
 class DH_DP27LateWeapon extends DHFastAutoWeapon;
 
-simulated function PostBeginPlay()
-{
-    super.PostBeginPlay();
-
-    // HACK: The DP27 is not rigged correctly and the bullet moves with the mag
-    // rotation bone. Until this is fixed, we just hide the bullet for now.
-    if (InstigatorIsLocallyControlled())
-    {
-        SetBoneScale(0, 0.0, 'Round');
-    }
-}
-
 // Modified to fix graphics bug where a Mac computer doesn't draw the specularity shader, leaving most of the 1st person weapon invisible to the user
 simulated function PostNetBeginPlay()
 {
