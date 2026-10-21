@@ -343,6 +343,8 @@ simulated function bool AllowReload()
     {
         return super.AllowReload();
     }
+
+    return false; // a rocket is already loaded, so there is nothing to reload
 }
 
 // Modified to prevent proning while reloading
