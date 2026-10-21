@@ -123,10 +123,10 @@ defaultproperties
     PA_StandWeaponUnDeployAnim="stand_idlehip_wz35"
     PA_ProneWeaponUnDeployAnim="prone_idle_wz35"
     PA_Fire="stand_shoothip_wz35"
-    PA_IronFire="stand_idleiron_wz35"   //"stand_shootiron_wz35"
+    PA_IronFire="stand_shootiron_wz35"
     PA_CrouchFire="crouch_shootiron_wz35"
     PA_ProneFire="prone_shoot_wz35"
-    PA_DeployedFire="stand_idleiron_wz35"   //"stand_shootiron_wz35"
+    PA_DeployedFire="stand_shootiron_wz35"
     PA_CrouchDeployedFire="crouch_shootiron_wz35"
     PA_ProneDeployedFire="prone_shoot_wz35"
 
