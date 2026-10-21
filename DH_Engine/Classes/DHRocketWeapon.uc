@@ -263,8 +263,6 @@ function ServerSetFirePitch(int AddedPitch)
 // Modified to update the player's reload & resupply status, & to destroy any RocketAttachment
 simulated function PostFire()
 {
-    local DHRocketWeaponAttachment RWA;
-
     if (Role == ROLE_Authority)
     {
         if (PrimaryAmmoArray.Length > 0)
@@ -274,14 +272,9 @@ simulated function PostFire()
 
         UpdateResupplyStatus(true);
 
-        RWA = DHRocketWeaponAttachment(ThirdPersonActor);
-
-        if (RWA != none)
-        {
-            // Set the attachment's ammo status from the weapon's actual load state, instead of just assuming the tube is empty after firing
-            // For a rocket weapon, AmmoCharge[0] is the loaded/unloaded flag (see IsLoaded), not a round count, & spare rockets are the mags in PrimaryAmmoArray
-            RWA.bOutOfAmmo = !IsLoaded();
-        }
+        // Set the attachment's ammo status from the weapon's actual load state, instead of just assuming the tube is empty after firing
+        // For a rocket weapon, AmmoCharge[0] is the loaded/unloaded flag (see IsLoaded), not a round count, & spare rockets are the mags in PrimaryAmmoArray
+        UpdateAttachmentLoadStatus();
     }
 
     if (RocketAttachment != none)
@@ -307,11 +300,27 @@ function AttachToPawnHidden(Pawn P)
 }
 
 // New function to set the 3rd person attachment's ammo status from whether a rocket is loaded
+// Called only on the authority. A listen server or standalone game never runs the attachment's PostNetReceive,
+// so it also updates the warhead here. A dedicated server shows nothing, so it skips that.
 function UpdateAttachmentLoadStatus()
 {
-    if (ROWeaponAttachment(ThirdPersonActor) != none)
+    local ROWeaponAttachment       WA;
+    local DHRocketWeaponAttachment RWA;
+
+    WA = ROWeaponAttachment(ThirdPersonActor);
+
+    if (WA == none)
     {
-        ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = !IsLoaded();
+        return;
+    }
+
+    WA.bOutOfAmmo = !IsLoaded();
+
+    RWA = DHRocketWeaponAttachment(WA);
+
+    if (RWA != none && RWA.bHideWarheadWhenFired && Level.NetMode != NM_DedicatedServer)
+    {
+        RWA.ShowWarhead(!RWA.bOutOfAmmo);
     }
 }
 
@@ -415,10 +424,7 @@ function PerformReload(optional int Count)
     {
         AmmoCharge[0] = 1; // signifies rocket loaded
 
-        if (IsLoaded() && ROWeaponAttachment(ThirdPersonActor) != none)
-        {
-            ROWeaponAttachment(ThirdPersonActor).bOutOfAmmo = false; // update the weapon attachment ammo status
-        }
+        UpdateAttachmentLoadStatus(); // update the weapon attachment ammo status (& the warhead on a listen server or in single player)
 
         UpdateResupplyStatus(true);
     }
