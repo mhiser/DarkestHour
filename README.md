@@ -62,4 +62,6 @@ Set your own admin account before the server goes public.
 * Option 1: add `?AdminName=YourName?AdminPassword=YourPassword` to the map URL in the launcher.
 * Option 2: add `AdminUsers` entries under `[XAdmin.xAdminConfigIni]` in `xAdmin.ini`.
 
-If no admin account exists, the engine creates the account `Admin` with the password `Admin`. This account also opens the web admin on port 8075. Change or remove it before the server goes public.
+If no admin account exists, the engine creates the account `Admin` with the password `Admin`. Change or remove it before the server goes public.
+
+The web admin on port 8075 is off by default. To turn it on, set `bEnabled=True` under `[UWeb.WebServer]` in your server ini. Set your own admin account first.
