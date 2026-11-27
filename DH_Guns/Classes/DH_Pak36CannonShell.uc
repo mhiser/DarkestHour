@@ -13,7 +13,7 @@ defaultproperties
     Speed=44962     // 745m/s
     MaxSpeed=44962
     ShellDiameter=3.7
-    BallisticCoefficient=2.52 //TODO: pls, check
+    BallisticCoefficient=1.2 // verified 37 mm M51 APC scaled by mass (1.52 x 0.685/0.87)
 
     //Damage
     ImpactDamage=700  //29 gramms TNT filler

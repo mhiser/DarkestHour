@@ -14,7 +14,7 @@ defaultproperties
     Speed=61559.04
     MaxSpeed=61559.04
     ShellDiameter=3.7
-    BallisticCoefficient=0.95   // TODO: coeff on this shell?
+    BallisticCoefficient=0.71 // sectional density x 1.86 (verified HVAP BC/SD)
     SpeedFudgeScale=0.5
 
     //Damage

@@ -10,7 +10,7 @@ defaultproperties
     Speed=47799.0
     MaxSpeed=47799.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: find correct BC
+    BallisticCoefficient=2.48 // Hellcat M42A1 value x 2.85/3.21 (verified M62 ratio, 3 in M7 vs 76 mm M1)
 
     //Damage
     ImpactDamage=450
