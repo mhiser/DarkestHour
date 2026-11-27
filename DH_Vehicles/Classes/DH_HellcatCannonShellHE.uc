@@ -10,7 +10,7 @@ defaultproperties
     Speed=47799.0
     MaxSpeed=47799.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: pls find correct BC, this is terribly wrong
+    BallisticCoefficient=2.79 // M42A1 5.84 kg: sectional density x 1.95 (verified M71 HE)
 
     //Damage
     ImpactDamage=450
