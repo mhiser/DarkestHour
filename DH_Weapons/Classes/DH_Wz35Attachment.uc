@@ -113,10 +113,13 @@ defaultproperties
     PA_IdleDeployedAnim="stand_idleiron_wz35"
     PA_IdleDeployedProneAnim="prone_idle_wz35"
     PA_IdleDeployedCrouchAnim="crouch_idleiron_wz35"
-    PA_ReloadAnim="stand_reload_wz35"   // TODO: this animation doesn'rt exist???
-    PA_ProneReloadAnim="prone_reload_wz35"
-    PA_ReloadEmptyAnim="stand_reload_wz35"     // TODO: this animation doesn'rt exist??? use the ptrd one?
-    PA_ProneReloadEmptyAnim="prone_reload_wz35"
+    // No Wz35 reload sequence exists on the character skeleton. Each _wz35 pawn
+    // sequence has a _ptrd twin, and both rifles reload only on the bipod, so
+    // the PTRD reload matches this pose.
+    PA_ReloadAnim="stand_reload_ptrd"
+    PA_ProneReloadAnim="prone_reload_ptrd"
+    PA_ReloadEmptyAnim="stand_reload_ptrd"
+    PA_ProneReloadEmptyAnim="prone_reload_ptrd"
     PA_ProneIdleRestAnim="prone_idle_wz35"
     PA_StandWeaponDeployAnim="stand_idleiron_wz35"
     PA_ProneWeaponDeployAnim="prone_idle_wz35"
