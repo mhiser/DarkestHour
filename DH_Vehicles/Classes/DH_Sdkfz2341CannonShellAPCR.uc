@@ -13,7 +13,7 @@ defaultproperties
     Speed=63369.6
     MaxSpeed=63369.6
     ShellDiameter=1.2 // sub-caliber round, 12mm tungsten core
-    BallisticCoefficient=0.75 //Guesstimate based on lower weight and higher velocity of shell
+    BallisticCoefficient=0.75 // BC/SD 2.1, near the HVAP band
 
     //Damage
     bShatterProne=true

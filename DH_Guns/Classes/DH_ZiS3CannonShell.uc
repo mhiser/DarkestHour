@@ -11,7 +11,7 @@ defaultproperties
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.55 //TODO: pls, check
+    BallisticCoefficient=1.55 // blunt-nose APHEBC, BC/SD 0.97
 
     //Damage
     ImpactDamage=660  //109 gramms TNT filler

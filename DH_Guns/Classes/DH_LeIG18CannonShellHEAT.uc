@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=25348.0
     SpeedFudgeScale=1.0
     ShellDiameter=7.5
-    BallisticCoefficient=2.1 //TODO: pls, check
+    BallisticCoefficient=2.1 // high for HEAT, table tuned to it and shared with M116
 
     //Damage
     ImpactDamage=350   //~~600 gramms TNT

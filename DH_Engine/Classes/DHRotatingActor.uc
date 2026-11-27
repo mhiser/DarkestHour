@@ -5,6 +5,15 @@
 
 class DHRotatingActor extends Actor;
 
+// How remote clients see the traverse (verified 2026-11-27, issue #119):
+// RotationFactor stays on the server, and only the server runs UpdateRotation.
+// Engine.Actor replicates DesiredRotation, RotationRate and bRotateToDesired
+// while Physics is PHYS_Rotating and bReplicateMovement is true.
+// Each client then turns this actor toward DesiredRotation with its own
+// PHYS_Rotating, so the traverse is smooth, not a snap at the end.
+// The AT gun is based on this actor, so the gun turns with it.
+// Do not replicate RotationFactor, or clients add a second traverse.
+
 var DHGameReplicationInfo DHGRI;
 var DHPawn ControllerPawn;
 

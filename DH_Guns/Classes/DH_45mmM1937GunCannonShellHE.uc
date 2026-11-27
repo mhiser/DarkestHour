@@ -10,7 +10,7 @@ defaultproperties
     Speed=20218.0 // 335 m/s
     MaxSpeed=20218.0
     ShellDiameter=4.5
-    BallisticCoefficient=0.6 // TODO: try to find an accurate BC (this is from AHZ)
+    BallisticCoefficient=0.6 // low for HE, kept because sight tables are tuned to it
 
     //Damage
     ImpactDamage=425

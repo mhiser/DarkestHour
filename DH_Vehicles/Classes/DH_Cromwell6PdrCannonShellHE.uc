@@ -10,7 +10,7 @@ defaultproperties
     Speed=50152.0 //TODO: pls confirm
     MaxSpeed=50152.0
     ShellDiameter=5.7
-    BallisticCoefficient=1.19 //TODO: pls, check
+    BallisticCoefficient=1.19 // HE shell, BC/SD 1.0
 
     //Damage
     ImpactDamage=350

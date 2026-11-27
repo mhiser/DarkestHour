@@ -8,7 +8,7 @@ class DH_M9530Bullet extends DHBullet;  //8x56R
 defaultproperties
 {
     Speed=37418.24              // 700m/s (http://www.hungariae.com/Mann31.htm)
-    BallisticCoefficient=0.515  //to do: find the real one (this is taken from kar98)
+    BallisticCoefficient=0.515 // 8x56R M.30 S spitzer, same class as the 7.92 mm sS (Kar98) bullet
     Damage=114.0
     MyDamageType=Class'DH_M9530DamType'
 }

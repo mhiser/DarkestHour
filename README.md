@@ -54,3 +54,14 @@ After completing the steps above and successfully cloning the repository, you ca
 * Run the development version of the SDK via `%RODIR%/System/DHEd.bat`.
 
 Be aware that these batch files will compile the game's code files if necessary. Compilation can fail if there are errors in your code.
+
+## Running a server
+Use `%RODIR%/System/dh_server_launcher.bat` to start a dedicated server.
+
+Set your own admin account before the server goes public.
+* Option 1: add `?AdminName=YourName?AdminPassword=YourPassword` to the map URL in the launcher.
+* Option 2: add `AdminUsers` entries under `[XAdmin.xAdminConfigIni]` in `xAdmin.ini`.
+
+If no admin account exists, the engine creates the account `Admin` with the password `Admin`. Change or remove it before the server goes public.
+
+The web admin on port 8075 is off by default. To turn it on, set `bEnabled=True` under `[UWeb.WebServer]` in your server ini. Set your own admin account first.

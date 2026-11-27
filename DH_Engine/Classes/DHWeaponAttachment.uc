@@ -25,6 +25,9 @@ var     name        WA_DeployedFire;
 var     bool        bStaticReload; // Reload animations will take over the
                                    // entire body (useful for deployed weapons).
 
+// Reload anims play in a sequence (pre-reload, reload, post-reload), so AnimEnd must not play the idle anim between them
+var     bool        bSequentialReloadAnims;
+
 var     name        PA_BarrelChangeStandAnim;
 var     name        PA_BarrelChangeCrouchAnim;
 var     name        PA_BarrelChangeProneAnim;
@@ -52,6 +55,26 @@ var     Vector  MuzzleFlashOffset;
 simulated function Vector GetTipLocation()
 {
     return GetBoneCoords(MuzzleBoneName).Origin;
+}
+
+// Modified so that if reload anims play in a sequence, we skip the Super (which only plays the idle anim)
+// after the reload or pre-reload anim, as the sequence ends with the post-reload anim
+simulated function AnimEnd(int Channel)
+{
+    local name  Anim;
+    local float Frame, Rate;
+
+    if (bSequentialReloadAnims)
+    {
+        GetAnimParams(0, Anim, Frame, Rate);
+
+        if (Anim == WA_Reload || Anim == WA_PreReload)
+        {
+            return;
+        }
+    }
+
+    super.AnimEnd(Channel);
 }
 
 // Modified to avoid spawning a barrel steam emitter - instead wait until weapon is selected

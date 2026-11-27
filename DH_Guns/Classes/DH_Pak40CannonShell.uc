@@ -10,7 +10,7 @@ defaultproperties
     Speed=45270.0
     MaxSpeed=45270.0
     ShellDiameter=7.5
-    BallisticCoefficient=2.52 //TODO: pls, check
+    BallisticCoefficient=2.52 // BC/SD 1.47, a little below the band
 
     //Damage
     ImpactDamage=700  //29 gramms TNT filler

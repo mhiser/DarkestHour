@@ -42,7 +42,6 @@ defaultproperties
     BashAnim="bash_attack"
     BashFinishAnim="bash_return"
     TearDownSound=SoundGroup'DH_WeaponSounds.shovel_hit'
-    // TODO: These sounds got lost in a merge & need to be added back.
-    // PlayerStabSound=SoundGroup'DH_WeaponSounds.ZombieBash'
-    // PlayerBashSound=SoundGroup'DH_WeaponSounds.ZombieBash'
+    // The player hit sounds come from DHMeleeFire (butt_hit and bayo_hit). The
+    // ZombieBash sound was lost in a merge, and the stock sounds suit a mace.
 }

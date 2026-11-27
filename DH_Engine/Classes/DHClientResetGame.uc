@@ -13,12 +13,15 @@ Then client actor's Reset() function can handle whatever is needed, e.g. for smo
 Note that Reset also gets called on those actors in single player mode, where it will have the same desired result
 Also using it to make sure local player's WeaponUnlockTime is reset for new round
 
-TODO: think this actor can be replaced by using ClientReset(), which gets called on PlayerControllers whenever a round starts, including if ResetGame is used
-That function is already doing a foreach AllActors iteration to call Reset() on specified client actors
-Instead of certain specified class literals, I believe it can be used to simply call Reset() on all actors on the client
-They will only do anything if they have a Reset() function & it is simulated, which should only be the actors we want to reset/destroy
-ClientReset() would also be ideal for making sure the local player's WeaponUnlockTime is reset, as they are both in DHPlayer
-A change required would be in DHGame's state RoundInPlay BeginState() function, as it currently doesn't call ClientReset() on any spectating players
+Client round reset contract (issue #106):
+- Spawn sites: DarkestHourGame state ResetGame Timer() and state RoundOver Timer().
+  Both spawn this actor on a dedicated or listen server just before GotoState('RoundInPlay').
+- Server: DarkestHourGame state RoundInPlay BeginState() calls Reset() on every server actor.
+  Replicated actors bring clients in line through replication.
+- Net clients: this actor calls Reset() on every client-only actor (Role == ROLE_Authority on the client).
+  To reset on a client, such an actor overrides Reset().
+- Listen server host: the server reset loop already resets the host's local actors.
+- Spectators get this reset too. DHPlayer.ClientReset() does not reach them, so keep this actor.
 */
 
 simulated function PostBeginPlay()

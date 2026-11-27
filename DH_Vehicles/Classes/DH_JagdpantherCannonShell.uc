@@ -10,7 +10,7 @@ defaultproperties
     Speed=60352.0
     MaxSpeed=60352.0
     ShellDiameter=8.8
-    BallisticCoefficient=3.8 //TODO: find correct BC
+    BallisticCoefficient=3.8 // BC/SD 2.04, inside the verified APC band
 
     //Damage
     ImpactDamage=1150  //109 gramms TNT filler same as king tiger now

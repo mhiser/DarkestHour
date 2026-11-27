@@ -980,7 +980,8 @@ private function OnSquadLeaderLeftSquad(int TeamIndex, int SquadIndex)
 // Returns true if player successfully leaves his squad.
 // The player is guaranteed to not be a member of a squad after this
 // call, regardless of the return value.
-// TODO: these optional bools are ugly and are indicative that a minor refactor is required around this code flow.
+// bShouldShowLeftMessage: tell the player "You have left the squad."
+// bShouldNotInvalidateRole: keep the role, as JoinSquad does when it moves the player to a new squad.
 function bool LeaveSquad(DHPlayerReplicationInfo PRI, optional bool bShouldShowLeftMessage, optional bool bShouldNotInvalidateRole)
 {
     local int TeamIndex, SquadIndex, SquadMemberIndex;
