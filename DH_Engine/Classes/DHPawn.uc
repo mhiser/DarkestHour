@@ -175,7 +175,7 @@ replication
 
     // Variables the server will replicate to all clients
     reliable if (bNetDirty && Role == ROLE_Authority)
-        bOnFire, bCrouchMantle, MantleHeight, Radio, BackpackClass;
+        bOnFire, bCrouchMantle, MantleHeight, Radio, BackpackClass, BackpackLocationOffset, BackpackRotationOffset;
 
     // Functions a client can call on the server
     reliable if (Role < ROLE_Authority)

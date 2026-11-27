@@ -201,7 +201,7 @@ static function string GetPawnClass()
     return default.RolePawnClass;
 }
 
-// TODO: Refactor offset stuff!
+// Picks a random backpack and outputs the offsets that belong to it
 function class<DHBackpack> GetBackpack(out Vector LocationOffset, out Rotator RotationOffset)
 {
     local float R, ProbabilitySum;
@@ -227,8 +227,8 @@ function class<DHBackpack> GetBackpack(out Vector LocationOffset, out Rotator Ro
 
         if (R <= ProbabilitySum)
         {
-            LocationOffset = Backpacks[0].LocationOffset;
-            RotationOffset = Backpacks[0].RotationOffset;
+            LocationOffset = Backpacks[i].LocationOffset;
+            RotationOffset = Backpacks[i].RotationOffset;
 
             return Backpacks[i].BackpackClass;
         }
