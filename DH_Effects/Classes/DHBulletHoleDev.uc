@@ -12,7 +12,10 @@ class DHBulletHoleDev extends ROBulletHole;
 
 defaultproperties
 {
-    // TODO: These sounds got lost in a merge & need to be added back.
-    //ProjTexture=Texture'DH_FX_Tex.DevImpact' //Purple Square impact to show off where a bullet landed
+    // Solid square that marks where a bullet landed. The old purple DevImpact
+    // texture was lost, and ROBulletHole sets no texture, so this decal drew
+    // nothing. The 512 pixel square at this scale is about bullet hole size.
+    ProjTexture=Texture'DHEngine_tex.Orange_Square'
+    DrawScale=0.01
     LifeSpan=30.0
 }
