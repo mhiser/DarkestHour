@@ -5,22 +5,10 @@
 
 class DH_MN9130ScopedPEAttachment extends DHWeaponAttachment;
 
-// Modified so we skip the Super if we've just played the reload or pre-reload animation
-simulated function AnimEnd(int Channel)
-{
-    local name  Anim;
-    local float Frame, Rate;
-
-    GetAnimParams(0, Anim, Frame, Rate);
-
-    if (Anim != WA_Reload && Anim != WA_PreReload)
-    {
-        super.AnimEnd(Channel);
-    }
-}
-
 defaultproperties
 {
+    bSequentialReloadAnims=true
+
     Mesh=SkeletalMesh'DH_Weapons3rd_2_anm.MosinScopedPE_3rd'
     MenuImage=Texture'DH_InterfaceArt_tex.MosinScopedPE_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdNagant'

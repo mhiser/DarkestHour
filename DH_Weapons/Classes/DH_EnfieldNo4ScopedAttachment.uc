@@ -5,23 +5,10 @@
 
 class DH_EnfieldNo4ScopedAttachment extends DHWeaponAttachment;
 
-// Modified so we don't play play the idle anim (which is all the Super does) if we just played reload or pre-reload animation
-// This is because the reload anims play in a sequence, ending with the post-reload anim
-simulated function AnimEnd(int Channel) // TODO: re-factor into a parent as this is in all the bolt action sniper rifles
-{
-    local name  Anim;
-    local float Frame, Rate;
-
-    GetAnimParams(0, Anim, Frame, Rate);
-
-    if (Anim != WA_Reload && Anim != WA_PreReload)
-    {
-        super.AnimEnd(Channel);
-    }
-}
-
 defaultproperties
 {
+    bSequentialReloadAnims=true
+
     Mesh=SkeletalMesh'DH_EnfieldNo4_anm.EnfieldNo4_Scoped_3rd'
     MenuImage=Texture'DH_EnfieldNo4_tex.EnfieldNo4Scoped_icon'
     mMuzFlashClass=Class'MuzzleFlash3rdNagant'
