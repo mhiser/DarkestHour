@@ -260,7 +260,7 @@ simulated state RaisingWeapon
     simulated function BeginState()
     {
        local int i;
-       local class<DHThrowableExplosiveProjectile> ProjectileClass;
+       local DHThrownExplosiveFire ThrownFire;
        local DHPlayer PC;
 
         super.BeginState();
@@ -270,14 +270,18 @@ simulated state RaisingWeapon
             FireMode[i].NextFireTime = Level.TimeSeconds;
         }
 
-        ProjectileClass = class<DHThrowableExplosiveProjectile>(FireModeClass[0].default.ProjectileClass);
+        // Ask the fire mode, so thrown HEAT grenades (RPG-43, Tipo L) also count as impact fuzed
+        ThrownFire = DHThrownExplosiveFire(FireMode[0]);
 
-        if (ProjectileClass != none && ProjectileClass.default.FuzeType == FT_Impact)
+        if (ThrownFire != none && ThrownFire.HasImpactFuze() && Instigator != none)
         {
             PC = DHPlayer(Instigator.Controller);
 
             // Hint message about impact grenades.
-            PC.QueueHint(55, true);
+            if (PC != none)
+            {
+                PC.QueueHint(55, true);
+            }
         }
     }
 
