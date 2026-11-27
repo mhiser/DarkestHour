@@ -10,7 +10,7 @@ defaultproperties
     Speed=42375.0 // 700 m/s
     MaxSpeed=42375.0
     ShellDiameter=5.7
-    BallisticCoefficient=1.14 //assumed
+    BallisticCoefficient=1.14 // low for HE (copied from AP), table tuned to it
 
     //Damage
     ImpactDamage=350

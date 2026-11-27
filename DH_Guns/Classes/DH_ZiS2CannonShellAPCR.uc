@@ -11,7 +11,7 @@ defaultproperties
     Speed=76647.0 // 1270 m/s
     MaxSpeed=76647.0
     ShellDiameter=4.0 //sub-caliber round
-    BallisticCoefficient=1.11 //assumed
+    BallisticCoefficient=1.11 // BC/SD 1.42, Soviet APCR body has more drag than HVAP
 
     //Damage
     ImpactDamage=420 // just a tungsten slug; no explosive filler

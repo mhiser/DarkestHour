@@ -10,7 +10,7 @@ defaultproperties
     Speed=45264.0
     MaxSpeed=45264.0
     ShellDiameter=8.8
-    BallisticCoefficient=3.25 //TODO: Pls check
+    BallisticCoefficient=3.25 // BC/SD 1.88, near verified M71 HE
 
     //Damage
     ImpactDamage=1000

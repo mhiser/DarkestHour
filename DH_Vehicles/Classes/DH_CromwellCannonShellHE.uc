@@ -10,7 +10,7 @@ defaultproperties
     Speed=27943.0
     MaxSpeed=27943.0
     ShellDiameter=7.5
-    BallisticCoefficient=1.686 //TODO: pls check
+    BallisticCoefficient=1.686 // differs from Sherman M48 HE (2.8), table tuned to it
 
     //Damage
     ImpactDamage=710

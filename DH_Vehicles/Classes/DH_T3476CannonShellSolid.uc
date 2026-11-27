@@ -11,7 +11,7 @@ defaultproperties
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.55 //TODO: pls, check
+    BallisticCoefficient=1.55 // blunt solid shot, BC/SD 1.0
 
     //Damage
     ImpactDamage=530  //solid shell - no filler

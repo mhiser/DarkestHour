@@ -10,7 +10,7 @@ defaultproperties
     Speed=47799.0
     MaxSpeed=47799.0
     ShellDiameter=7.62
-    BallisticCoefficient=1.368 //TODO: this seems wrong, pls check
+    BallisticCoefficient=1.368 // light smoke shell, BC/SD about 1.7
 
     //Penetration
     DHPenetrationTable(0)=0.2

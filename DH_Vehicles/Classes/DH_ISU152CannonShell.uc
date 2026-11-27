@@ -10,7 +10,7 @@ defaultproperties
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
     ShellDiameter=15.2
-    BallisticCoefficient=4.4 //TODO: find correct BC
+    BallisticCoefficient=4.4 // uncapped AP, BC/SD 1.47
 
     //Damage
     ImpactDamage=3000  //extremely powerful round with 400-600 gramms TNT - should leave nothing alive after penetration

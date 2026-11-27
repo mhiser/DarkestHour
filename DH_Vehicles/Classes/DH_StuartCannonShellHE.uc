@@ -10,7 +10,7 @@ defaultproperties
     Speed=47828.0 // 2600 fps or 793 m/s
     MaxSpeed=47828.0
     ShellDiameter=3.7
-    BallisticCoefficient=0.984 //TODO: double check this
+    BallisticCoefficient=0.984 // BC/SD 1.30, plausible for small HE
 
     //Damage
     ImpactDamage=185

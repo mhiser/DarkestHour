@@ -10,7 +10,7 @@ defaultproperties
     Speed=29874.0
     MaxSpeed=29874.0
     ShellDiameter=10.5
-    BallisticCoefficient=2.96 //find correct BC - this is likely wrong
+    BallisticCoefficient=2.96 // howitzer HE, BC/SD 1.55, same as US 105 mm M1 HE
 
     //Damage
     ImpactDamage=650  //1.75 KG TNT

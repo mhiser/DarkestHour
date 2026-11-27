@@ -11,7 +11,7 @@ defaultproperties
     Speed=59930.0 // 990 m/s
     MaxSpeed=59930.0
     ShellDiameter=5.7
-    BallisticCoefficient=1.14 //TODO: find correct BC
+    BallisticCoefficient=1.14 // blunt-nose APBC, BC/SD near M77 blunt shot
 
     //Damage
     ImpactDamage=460  //14 gramms TNT filler

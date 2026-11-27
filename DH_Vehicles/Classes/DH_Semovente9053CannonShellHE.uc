@@ -13,7 +13,7 @@ defaultproperties
     Speed=50092.0               // 830m/s [1]
     MaxSpeed=50092.0
     ShellDiameter=9.0           // 90mm [1]
-    BallisticCoefficient=2.5    // TODO: Find real value
+    BallisticCoefficient=2.5 // BC/SD 1.38, plausible for gun HE
 
     //Damage
     ImpactDamage=1000

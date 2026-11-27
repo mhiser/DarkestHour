@@ -11,7 +11,7 @@ defaultproperties
     Speed=39953.0 // 662 m/s
     MaxSpeed=39953.0
     ShellDiameter=5.0 //sub-caliber round
-    BallisticCoefficient=1.55 //TODO: pls, check
+    BallisticCoefficient=1.55 // placeholder copy of the AP round (speed, BC and table)
 
     //Damage
     ImpactDamage=375 // just a tungsten slug; no explosive filler
