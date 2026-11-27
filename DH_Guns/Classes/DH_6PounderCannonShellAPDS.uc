@@ -10,7 +10,7 @@ defaultproperties
     Speed=73569.0 //1250 m/s
     MaxSpeed=73569.0
     ShellDiameter=3.7 //sub-caliber round
-    BallisticCoefficient=1.15 // TODO: pls, check
+    BallisticCoefficient=1.15 // no verified APDS sibling, order vs 17pdr APDS follows sub-projectile mass
 
     //Damage
     bShatterProne=true

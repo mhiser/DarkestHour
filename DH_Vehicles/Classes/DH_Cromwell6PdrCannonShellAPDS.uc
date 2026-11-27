@@ -10,7 +10,7 @@ defaultproperties
     Speed=73569.0
     MaxSpeed=73569.0
     ShellDiameter=3.7 //sub-caliber
-    BallisticCoefficient=1.15 //TODO: pls, check
+    BallisticCoefficient=1.15 // same round as the 6pdr gun APDS
 
     //Damage
     bShatterProne=true

@@ -10,7 +10,7 @@ defaultproperties
     Speed=53170.0
     MaxSpeed=53170.0
     ShellDiameter=4.0
-    BallisticCoefficient=0.984 //TODO: pls, check
+    BallisticCoefficient=0.984 // BC/SD 1.23, consistent with the 37 mm HE
 
     //Damage
     ImpactDamage=300

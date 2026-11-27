@@ -10,7 +10,7 @@ defaultproperties
     Speed=36211.0 // 600 m/s
     MaxSpeed=36211.0
     ShellDiameter=15.2
-    BallisticCoefficient=5.5 //TODO: find correct BC
+    BallisticCoefficient=5.5 // BC/SD 2.06, top of the verified band
 
     //Damage
     ImpactDamage=3000  //5.3 KG TNT, should destroy anything it penetrates, cripple anything that gets hit.

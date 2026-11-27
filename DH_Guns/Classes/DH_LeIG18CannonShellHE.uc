@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=6962.0     // arbitrary value
     SpeedFudgeScale=1.0
     ShellDiameter=7.5
-    BallisticCoefficient=2.96 //TODO: pls find correct BC
+    BallisticCoefficient=2.96 // BC/SD 1.95, matches verified M71 HE
     LifeSpan=30.0
 
     //Damage

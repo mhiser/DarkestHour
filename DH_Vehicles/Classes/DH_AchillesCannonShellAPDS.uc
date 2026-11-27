@@ -10,7 +10,7 @@ defaultproperties
     Speed=77492.0
     MaxSpeed=77492.0
     ShellDiameter=5.0 //sub-caliber tungsten slug
-    BallisticCoefficient=1.47 //TODO: pls check
+    BallisticCoefficient=1.47 // no verified APDS sibling, order vs 6pdr APDS follows sub-projectile mass
 
     //Damage
     ImpactDamage=600

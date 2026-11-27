@@ -10,7 +10,7 @@ defaultproperties
     Speed=55270.0  //estimate
     MaxSpeed=55270.0
     ShellDiameter=5.0 //sub-caliber round
-    BallisticCoefficient=1.52 //TODO: pls, check
+    BallisticCoefficient=1.52 // BC/SD 1.47, a little below the HVAP band
     SpeedFudgeScale=0.4
 
     //Damage

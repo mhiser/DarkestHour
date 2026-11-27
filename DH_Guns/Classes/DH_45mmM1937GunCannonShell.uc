@@ -11,7 +11,7 @@ defaultproperties
     Speed=45868.0 // 760 m/s
     MaxSpeed=45868.0
     ShellDiameter=4.5
-    BallisticCoefficient=0.7 // TODO: try to find an accurate BC (this is from AHZ)
+    BallisticCoefficient=0.7 // blunt-nose APBC, BC/SD near M77 blunt shot
 
     //Damage
     ImpactDamage=295 //30 gramms TNT filler

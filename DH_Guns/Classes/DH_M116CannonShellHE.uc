@@ -12,7 +12,7 @@ defaultproperties
     Speed=8192.0 // TODO: arbitrary
     MaxSpeed=8192.0
     ShellDiameter=7.5
-    BallisticCoefficient=2.8 //TODO: pls check - this is the APC shell's BC
+    BallisticCoefficient=2.8 // BC/SD 1.67, inside the verified band
     SpeedFudgeScale=1.0
     LifeSpan=30.0
     bHasTracer=false

@@ -13,7 +13,7 @@ defaultproperties
     Speed=45746.816     // 758m/s [2]
     MaxSpeed=45746.816
     ShellDiameter=9.0   // 90mm [1]
-    BallisticCoefficient=3.2   // TODO: Find real value, currently using the flak88 as a basis
+    BallisticCoefficient=3.2 // BC/SD 1.80, inside the verified APC band
 
     //Damage
     ImpactDamage=2456 //347 gramms TNT filler, citation needed

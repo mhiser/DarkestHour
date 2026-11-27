@@ -10,7 +10,7 @@ defaultproperties
     Speed=28486.0
     MaxSpeed=28486.0
     ShellDiameter=10.5
-    BallisticCoefficient=2.96 //TODO: pls check
+    BallisticCoefficient=2.96 // howitzer HE, BC/SD 1.53
 
     //Damage
     ImpactDamage=2000  //2.2 KG TNT

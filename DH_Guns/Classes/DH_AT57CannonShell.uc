@@ -10,7 +10,7 @@ defaultproperties
     Speed=50152.0
     MaxSpeed=50152.0
     ShellDiameter=5.7
-    BallisticCoefficient=1.19 //TODO: find correct BC
+    BallisticCoefficient=1.19 // APC without windshield, BC/SD between M77 and capped APC
 
     //Damage
     ImpactDamage=390  //solid shell

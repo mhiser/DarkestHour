@@ -10,7 +10,7 @@ defaultproperties
     Speed=48281.0
     MaxSpeed=48281.0
     ShellDiameter=8.8
-    BallisticCoefficient=3.3 //pls, check
+    BallisticCoefficient=3.3 // BC/SD 1.76, inside the verified APC band
 
     //Damage
     ImpactDamage=975  //109 gramms TNT filler

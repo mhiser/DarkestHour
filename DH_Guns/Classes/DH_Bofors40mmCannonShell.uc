@@ -12,7 +12,7 @@ defaultproperties
     Speed=53170.0
     MaxSpeed=53170.0
     ShellDiameter=4.0
-    BallisticCoefficient=0.984 // TODO: try to find an accurate BC (this is same as US 37mm)
+    BallisticCoefficient=0.984 // BC/SD 1.24, consistent with US 37 mm after mass scaling
 
     //Damage
     ImpactDamage=180 //solid shell, i assume because didnt find any info

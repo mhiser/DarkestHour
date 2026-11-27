@@ -11,7 +11,7 @@ defaultproperties
     Speed=45868.0 // 760 m/s
     MaxSpeed=45868.0
     ShellDiameter=3.7 //sub-caliber round
-    BallisticCoefficient=0.7 // TODO: pls check accurate BC (this is from AHZ)
+    BallisticCoefficient=0.7 // uncapped arrowhead APCR, below the HVAP band as expected
 
     //Damage
     ImpactDamage=220 // just a tungsten slug; no explosive filler

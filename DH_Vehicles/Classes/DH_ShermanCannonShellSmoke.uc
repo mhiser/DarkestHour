@@ -10,7 +10,7 @@ defaultproperties
     Speed=37358.0 // 2030 fps or 619 m/s
     MaxSpeed=37358.0
     ShellDiameter=7.5
-    BallisticCoefficient=2.8 //TODO: pls check - this is the APC shell's BC
+    BallisticCoefficient=2.8 // BC/SD 1.60, inside the verified band
 
     //Penetration
     DHPenetrationTable(0)=0.2

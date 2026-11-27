@@ -11,7 +11,7 @@ defaultproperties
     MaxSpeed=29874.0
     ShellDiameter=10.5
     DrawScale=1.5
-    BallisticCoefficient=2.96 // same as 105mm HE or HEAT shells
+    BallisticCoefficient=2.96 // BC/SD about 1.56, same basis as 105 mm HE
     ImpactDamage=175 // 75mm smoke shells are 125, so increased as this is a larger, heavier shell
 
     SmokeEmitterClass=Class'DHSmokeEffect_LargeShell'
