@@ -64,7 +64,7 @@ defaultproperties
     NumMagsToResupply=1
     bCanHaveInitialNumMagsChanged=false  //makes sense because carried ammo is primarily limited by "dead weight" of the pan magazines rather than ammo itself
 
-    InitialBarrels=1  //to do: make barrel swap animation
+    InitialBarrels=1 // no spare barrel: the DP-27 has no quick-change barrel, same as DH_DP27Weapon
     BarrelClass=Class'DH_DP27Barrel'
     BarrelSteamBone="bipod"
 
