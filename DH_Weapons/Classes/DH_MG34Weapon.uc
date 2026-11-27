@@ -46,7 +46,7 @@ defaultproperties
     // It's because the shader uses the diffuse texture (which contains alpha transparency for the barrel shroud perforations) as an opacity mask
     // When overlaid on top of the standard texture, it appears the combination of an alpha texture used as an opacity mask creates this unwanted transparency
     Skins(2)=Shader'Weapons1st_tex.mg34_s'
-    Skins(3)=Shader'Weapons1st_tex.MGBipod_S' // TODO: bipod specularity shader isn't used in the anim mesh & should be added there
+    Skins(3)=Shader'Weapons1st_tex.MGBipod_S' // the anim mesh lacks the bipod shader, so it is set here
     HandTex=Texture'Weapons1st_tex.hands_gergloves'
 
     PlayerIronsightFOV=90.0
